@@ -1,6 +1,7 @@
 
 import Layout from "./Layout";
 import Login from "./components/Login";
+import SignUp from "./components/Signup";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -20,6 +21,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />} />
         <Route path="/login" element={<Login />} />
+        <Route
+                    path="/signup"
+                    element={
+                        
+                            <SignUp />
+                        
+                    }
+                />
       </Routes>
     </>
   );

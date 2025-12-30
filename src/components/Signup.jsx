@@ -5,6 +5,30 @@ import { createAccount, userLogin } from "../Store/Slices/authSlice.js";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import LoginSkeleton from "../skeleton/loginSkeleton.jsx";
+import GetImagePreview from "./getImagePreview.jsx";
+
+
+const Input = React.forwardRef(({ label, ...props }, ref) => (
+  <div className="mb-4">
+    <label className="block mb-1 font-medium text-gray-700">{label}</label>
+    <input
+      ref={ref}
+      {...props}
+      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-900 bg-white/80 backdrop-blur-md transition-all duration-200 shadow-sm"
+    />
+  </div>
+));
+
+function Button({ children, className = "", ...props }) {
+  return (
+    <button
+      className={`bg-linear-to-r from-purple-500 to-indigo-500 text-white rounded-lg ${className} transition hover:scale-105 hover:shadow-xl font-semibold shadow-md py-3`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
 
 function SignUp() {
     const {
@@ -27,7 +51,7 @@ function SignUp() {
             );
 
             if (loginResult?.type === "login/fulfilled") {
-                navigate("/terms&conditions");
+                navigate("/");
             } else {
                 navigate("/login");
             }
@@ -43,7 +67,7 @@ function SignUp() {
             <div className="w-full h-screen text-white p-3 flex justify-center items-start sm:mt-8">
                 <div className="flex flex-col space-y-2 justify-center items-center border border-slate-600 p-3">
                     <div className="flex items-center gap-2">
-                        <Logo />
+                        
                     </div>
                     <form
                         onSubmit={handleSubmit(submit)}
@@ -52,11 +76,11 @@ function SignUp() {
                         <div className="w-full relative h-28 bg-[#222222]">
                             <div className="w-full h-full">
                                 <GetImagePreview
-                                    name="coverImage"
-                                    control={control}
-                                    className="w-full h-28 object-cover border-none border-slate-900"
+                                name="coverImage"
+                                control={control}
+                                className="w-full h-28 object-cover border-none border-slate-900"
                                     cameraIcon
-                                />
+                                    />
                                 <div className="text-sm absolute right-2 bottom-2 hover:text-purple-500 cursor-default">
                                     cover Image
                                 </div>
@@ -137,7 +161,7 @@ function SignUp() {
 
                         <Button
                             type="submit"
-                            bgColor="bg-purple-500"
+                            bgcolor="bg-purple-500"
                             className="w-full sm:py-3 py-2 hover:bg-purple-700 text-lg"
                         >
                             Signup

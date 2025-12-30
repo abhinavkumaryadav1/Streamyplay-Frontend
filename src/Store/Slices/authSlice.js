@@ -30,7 +30,7 @@ export const createAccount = createAsyncThunk("register", async (data)=>{
     
     
     try {
-        const response = await axiosInstance.post("/users/register", formData);
+        const response = await axiosInstance.post("/user/register", formData);
         console.log(response.data);
         toast.success("Registered successfully!!!");
         return response.data;

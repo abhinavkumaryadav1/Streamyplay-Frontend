@@ -45,9 +45,13 @@ export default function Navbar() {
             Login
           </button>
         )}
-        <button className="text-sm font-medium px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700">
-          Sign Up
-        </button>
+        {!userData && (
+          <button className="text-sm font-medium px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+            onClick={() => navigate("/signup")}
+          >
+            Sign Up
+          </button>
+        )}
         {userData && (
           <button
             className="flex items-center gap-2 text-sm font-medium px-4 py-2 border border-red-600 text-red-600 rounded-full hover:bg-red-50"
@@ -56,7 +60,15 @@ export default function Navbar() {
             <MdLogout className="text-lg" /> Logout
           </button>
         )}
-        <FaUserCircle className="text-3xl text-gray-700 cursor-pointer hover:text-black" />
+        {userData && userData.avatar ? (
+          <img
+            src={userData.avatar}
+            alt="User Avatar"
+            className="w-12 h-12 rounded-full object-cover border-2 border-gray-300 cursor-pointer hover:border-black transition"
+          />
+        ) : (
+          <FaUserCircle className="text-3xl text-gray-700 cursor-pointer hover:text-black" />
+        )}
       </div>
     </div>
   );
