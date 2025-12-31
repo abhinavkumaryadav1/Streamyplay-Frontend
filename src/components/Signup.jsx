@@ -74,10 +74,10 @@ function SignUp() {
                             <GetImagePreview
                                 name="coverImage"
                                 control={control}
-                                className="w-full h-24 sm:h-28 object-cover border-none border-slate-900 rounded-lg"
+                                className="w-full  sm:h-28 object-cover border-none border-slate-900 rounded-lg"
                                 cameraIcon
                             />
-                            <div className="text-xs sm:text-sm absolute right-2 bottom-2 hover:text-purple-500 cursor-default">
+                            <div className="text-xs sm:text-sm absolute right-2 bottom-10 hover:text-purple-500 cursor-default">
                                 cover Image
                             </div>
                         </div>
@@ -159,7 +159,7 @@ function SignUp() {
                     >
                         Signup
                     </Button>
-                    <p className="text-center text-xs sm:text-sm">
+                    <p className="text-center text-xs sm:text-sm text-neutral-950">
                         Already have an account?{" "}
                         <Link
                             to={"/login"}

@@ -16,9 +16,8 @@ export default function Navbar() {
 
   return (
     <div className="w-full h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 fixed top-0 left-0 z-20">
-      {/* Left section - Menu + Logo */}
+      {/* Left section - Logo only */}
       <div className="flex items-center gap-2 sm:gap-4">
-        <FaBars className="text-xl sm:text-2xl cursor-pointer hover:bg-gray-100 p-1 rounded-full" />
         <h1 className="text-lg sm:text-xl font-bold text-red-600">StreamyPlay</h1>
       </div>
       {/* Middle - Search Bar */}
