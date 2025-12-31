@@ -5,7 +5,7 @@ import { createAccount, userLogin } from "../Store/Slices/authSlice.js";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import LoginSkeleton from "../skeleton/loginSkeleton.jsx";
-import GetImagePreview from "./getImagePreview.jsx";
+import GetImagePreview from "./GetImagePreview.jsx";
 
 
 const Input = React.forwardRef(({ label, ...props }, ref) => (
