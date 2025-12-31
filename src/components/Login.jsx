@@ -75,7 +75,7 @@ function Login() {
 
   return (
     <div
-      className="w-full min-h-screen flex justify-center items-center relative overflow-hidden"
+      className="w-full min-h-screen flex justify-center items-center relative overflow-hidden px-2 sm:px-0"
       style={{
         background:
           "linear-gradient(120deg, #a18cd1 0%, #fbc2eb 100%)",
@@ -83,15 +83,15 @@ function Login() {
     >
       {/* Blurred floating gradient shapes */}
       <div
-        className="absolute top-0 left-0 w-96 h-96 bg-purple-400 opacity-30 rounded-full blur-3xl animate-pulse"
+        className="absolute top-0 left-0 w-60 h-60 sm:w-96 sm:h-96 bg-purple-400 opacity-30 rounded-full blur-3xl animate-pulse"
         style={{ zIndex: 0 }}
       ></div>
       <div
-        className="absolute bottom-0 right-0 w-80 h-80 bg-indigo-400 opacity-30 rounded-full blur-2xl animate-pulse"
+        className="absolute bottom-0 right-0 w-48 h-48 sm:w-80 sm:h-80 bg-indigo-400 opacity-30 rounded-full blur-2xl animate-pulse"
         style={{ zIndex: 0 }}
       ></div>
       <div
-        className="w-full max-w-md bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200 p-8 flex flex-col items-center z-10"
+        className="w-full max-w-xs sm:max-w-md bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl border border-gray-200 p-4 sm:p-8 flex flex-col items-center z-10"
         style={{
           boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
         }}
@@ -99,7 +99,7 @@ function Login() {
         <div className="flex items-center gap-2 mb-6">
           <Logo />
         </div>
-        <form onSubmit={handleSubmit(submit)} className="space-y-5 w-full">
+        <form onSubmit={handleSubmit(submit)} className="space-y-4 sm:space-y-5 w-full">
           <Input
             label="Username / email : "
             type="text"
@@ -129,12 +129,12 @@ function Login() {
           {errorMsg && <div className="text-red-400 text-sm">{errorMsg}</div>}
           <Button
             type="submit"
-            className="w-full text-lg"
+            className="w-full text-base sm:text-lg"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Login"}
           </Button>
-          <p className="text-center text-sm text-gray-700">
+          <p className="text-center text-xs sm:text-sm text-gray-700">
             Don&apos;t have an account?{" "}
             <Link
               to="/signup"
