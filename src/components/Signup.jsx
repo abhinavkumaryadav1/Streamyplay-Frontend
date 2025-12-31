@@ -69,28 +69,29 @@ function SignUp() {
                     onSubmit={handleSubmit(submit)}
                     className="space-y-3 sm:space-y-4 p-1 sm:p-2 text-xs sm:text-sm w-full"
                 >
-                    <div className="w-full relative h-24 sm:h-28 bg-[#222222] rounded-lg">
-                        <div className="w-full h-full">
-                            <GetImagePreview
-                                name="coverImage"
-                                control={control}
-                                className="w-full  sm:h-28 object-cover border-none border-slate-900 rounded-lg"
-                                cameraIcon
-                            />
-                            <div className="text-xs sm:text-sm absolute right-2 bottom-10 hover:text-purple-500 cursor-default">
-                                cover Image
-                            </div>
-                        </div>
-                        <div className="absolute left-2 bottom-2 rounded-full border-2">
-                            <GetImagePreview
-                                name="avatar"
-                                control={control}
-                                className="object-cover rounded-full h-12 w-12 sm:h-20 sm:w-20 outline-none"
-                                cameraIcon={true}
-                                cameraSize={20}
-                            />
-                        </div>
-                    </div>
+                    <div className="w-full relative h-24 sm:h-28 bg-[#222222] rounded-lg overflow-hidden">
+  <GetImagePreview
+    name="coverImage"
+    control={control}
+    className="w-full h-full object-cover"
+    cameraIcon
+  />
+
+  <div className="text-xs sm:text-sm absolute right-2 bottom-2 text-white/80">
+    Cover Image
+  </div>
+
+  <div className="absolute left-2 bottom-2 rounded-full border-2 border-white bg-black">
+    <GetImagePreview
+      name="avatar"
+      control={control}
+      className="object-cover rounded-full h-12 w-12 sm:h-20 sm:w-20"
+      cameraIcon
+      cameraSize={20}
+    />
+  </div>
+</div>
+
                     {errors.avatar && (
                         <div className="text-red-500">
                             {errors.avatar.message}
