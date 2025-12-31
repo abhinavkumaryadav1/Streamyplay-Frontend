@@ -22,7 +22,7 @@ export default function Navbar() {
         <h1 className="text-lg sm:text-xl font-bold text-red-600">StreamyPlay</h1>
       </div>
       {/* Middle - Search Bar */}
-      <div className="hidden xs:flex items-center w-[40%] sm:w-[50%] max-w-xs sm:max-w-2xl">
+      <div className="hidden sm:flex items-center w-[40%] sm:w-[50%] max-w-xs sm:max-w-2xl">
         <input 
           type="text"
           placeholder="Search"

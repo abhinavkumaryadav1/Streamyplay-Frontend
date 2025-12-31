@@ -27,7 +27,7 @@ function Sidebar() {
   };
 
   return (
-    <div className="hidden xs:flex w-40 sm:w-64 h-screen bg-white border-r border-gray-300 fixed left-0 top-14 sm:top-16 p-2 sm:p-4 overflow-y-auto flex-col z-30">
+    <div className="hidden sm:flex w-40 sm:w-64 h-screen bg-white border-r border-gray-300 fixed left-0 top-14 sm:top-16 p-2 sm:p-4 overflow-y-auto flex-col z-30">
       <div className="bg-gray-100 rounded-xl p-2 sm:p-3 flex flex-col gap-2 sm:gap-4 shadow-sm">
         <div className="flex flex-col gap-2 sm:gap-3 px-0 sm:px-1">
           {mainMenu.map((item, index) => (
