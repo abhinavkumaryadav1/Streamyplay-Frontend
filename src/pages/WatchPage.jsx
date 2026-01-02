@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getVideoById, updateVideoOwnerSubscription } from "../Store/Slices/videoSlice";
+import { getVideoById, getAllVideos, updateVideoOwnerSubscription } from "../Store/Slices/videoSlice";
 import { toggleVideoLike } from "../Store/Slices/likeSlice";
 import { toggleSubscription, getSubscribedChannels } from "../Store/Slices/subscriptionSlice";
 import { openAuthModal } from "../Store/Slices/uiSlice";
@@ -33,6 +33,20 @@ function WatchPage() {
       dispatch(getVideoById({ videoId }));
     }
   }, [dispatch, videoId]);
+
+  // Fetch related videos if not already loaded
+  useEffect(() => {
+    if (videos.docs.length === 0) {
+      dispatch(
+        getAllVideos({
+          page: 1,
+          limit: 15,
+          sortBy: "createdAt",
+          sortType: "desc",
+        })
+      );
+    }
+  }, [dispatch, videos.docs.length]);
 
   // Fetch user's subscribed channels to verify subscription status
   useEffect(() => {
@@ -299,12 +313,26 @@ function WatchPage() {
           <div className="w-full lg:w-[400px] flex-shrink-0">
             <h3 className="text-lg font-semibold mb-4">Related Videos</h3>
             <div className="flex flex-col gap-3">
-              {videos.docs
-                .filter((v) => v._id !== videoId)
-                .slice(0, 10)
-                .map((video) => (
-                  <VideoCardHorizontal key={video._id} video={video} />
-                ))}
+              {videos.docs.length === 0 ? (
+                // Skeleton loading for related videos
+                [...Array(5)].map((_, i) => (
+                  <div key={i} className="flex gap-3 animate-pulse">
+                    <div className="w-40 aspect-video bg-gray-300 rounded-lg flex-shrink-0"></div>
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-gray-300 rounded w-full"></div>
+                      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                      <div className="h-3 bg-gray-300 rounded w-1/2"></div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                videos.docs
+                  .filter((v) => v._id !== videoId)
+                  .slice(0, 10)
+                  .map((relatedVideo) => (
+                    <VideoCardHorizontal key={relatedVideo._id} video={relatedVideo} />
+                  ))
+              )}
             </div>
           </div>
         </div>
