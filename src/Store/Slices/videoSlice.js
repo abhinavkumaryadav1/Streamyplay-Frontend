@@ -7,6 +7,7 @@ const initialState = {
     loading: false,
     uploading: false,
     uploaded: false,
+    uploadProgress: 0,
     videos: {
         docs: [],
         hasNextPage: false,
@@ -54,22 +55,32 @@ export const getVideoById = createAsyncThunk(
 );
 
 
-export const publishAvideo = createAsyncThunk("publishAvideo", async (data) => {
-    const formData = new FormData();
-    formData.append("title", data.title);
-    formData.append("description", data.description);
-    formData.append("videoFile", data.videoFile[0]);
-    formData.append("thumbnail", data.thumbnail[0]);
+export const publishAvideo = createAsyncThunk(
+    "publishAvideo",
+    async (data, { dispatch }) => {
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("description", data.description);
+        formData.append("videoFile", data.videoFile[0]);
+        formData.append("thumbnail", data.thumbnail[0]);
 
-    try {
-        const response = await axiosInstance.post("/video", formData);
-        toast.success(response?.data?.message);
-        return response.data.data;
-    } catch (error) {
-        toast.error(error?.response?.data?.error);
-        throw error;
+        try {
+            const response = await axiosInstance.post("/video", formData, {
+                onUploadProgress: (progressEvent) => {
+                    const progress = Math.round(
+                        (progressEvent.loaded * 100) / progressEvent.total
+                    );
+                    dispatch(setUploadProgress(progress));
+                },
+            });
+            toast.success(response?.data?.message);
+            return response.data.data;
+        } catch (error) {
+            toast.error(error?.response?.data?.error);
+            throw error;
+        }
     }
-});
+);
 
 export const updateAVideo = createAsyncThunk(
     "updateAVideo",
@@ -130,9 +141,13 @@ const videoSlice = createSlice({
         updateUploadState: (state) => {
             state.uploading = false;
             state.uploaded = false;
+            state.uploadProgress = 0;
         },
         makeVideosNull: (state) => {
             state.videos.docs = [];
+        },
+        setUploadProgress: (state, action) => {
+            state.uploadProgress = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -182,6 +197,6 @@ const videoSlice = createSlice({
 
 
 
-export const { updateUploadState, makeVideosNull } = videoSlice.actions;
+export const { updateUploadState, makeVideosNull, setUploadProgress } = videoSlice.actions;
 
 export default videoSlice.reducer;
