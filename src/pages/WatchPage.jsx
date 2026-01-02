@@ -24,6 +24,7 @@ function WatchPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubscribing, setIsSubscribing] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [theaterMode, setTheaterMode] = useState(false);
 
@@ -51,7 +52,8 @@ function WatchPage() {
       // Fallback: verify against subscribedChannels list if user is logged in
       if (userData && subscribedChannels?.length > 0 && video.owner?._id) {
         const isInSubscribedList = subscribedChannels.some((item) => {
-          const channel = item.channel || item;
+          // Backend returns { subscribedChannel: { _id, username, ... } }
+          const channel = item.subscribedChannel || item.channel || item;
           return channel?._id === video.owner._id;
         });
         subscribed = isInSubscribedList;
@@ -76,20 +78,29 @@ function WatchPage() {
       dispatch(openAuthModal("Sign in to subscribe to this channel"));
       return;
     }
-    if (!video?.owner?._id) return;
-    const result = await dispatch(toggleSubscription(video.owner._id));
-    if (result.meta.requestStatus === "fulfilled") {
-      const newIsSubscribed = !isSubscribed;
-      const currentCount = video.owner?.subscribersCount || 0;
-      const newSubscribersCount = newIsSubscribed ? currentCount + 1 : currentCount - 1;
-      setIsSubscribed(newIsSubscribed);
-      // Update the video owner data in Redux store to persist across refreshes
-      dispatch(updateVideoOwnerSubscription({
-        isSubscribed: newIsSubscribed,
-        subscribersCount: newSubscribersCount,
-      }));
-      // Refetch subscribed channels to keep the list in sync
-      dispatch(getSubscribedChannels(userData._id));
+    if (!video?.owner?._id || isSubscribing) return;
+    
+    setIsSubscribing(true);
+    try {
+      const result = await dispatch(toggleSubscription(video.owner._id));
+      if (result.meta.requestStatus === "fulfilled") {
+        // Use the response from backend to determine subscription state
+        const newIsSubscribed = result.payload?.subscribed ?? !isSubscribed;
+        const currentCount = video.owner?.subscribersCount || 0;
+        const newSubscribersCount = newIsSubscribed ? currentCount + 1 : Math.max(0, currentCount - 1);
+        setIsSubscribed(newIsSubscribed);
+        // Update the video owner data in Redux store to persist across refreshes
+        dispatch(updateVideoOwnerSubscription({
+          isSubscribed: newIsSubscribed,
+          subscribersCount: newSubscribersCount,
+        }));
+        // Refetch subscribed channels to keep the list in sync
+        dispatch(getSubscribedChannels(userData._id));
+      }
+    } catch (error) {
+      console.error("Subscription error:", error);
+    } finally {
+      setIsSubscribing(false);
     }
   };
 
@@ -207,16 +218,17 @@ function WatchPage() {
                       {owner?.subscribersCount || 0} subscribers
                     </p>
                   </div>
-                  {userData && userData._id !== owner?._id && (
+                  {owner?._id && (!userData || userData._id !== owner?._id) && (
                     <button
                       onClick={handleSubscribe}
-                      className={`ml-4 px-4 py-2 rounded-full text-sm font-semibold transition ${
+                      disabled={isSubscribing}
+                      className={`ml-4 px-4 py-2 rounded-full text-sm font-semibold transition disabled:opacity-70 disabled:cursor-not-allowed ${
                         isSubscribed
                           ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
                           : "bg-red-600 text-white hover:bg-red-700"
                       }`}
                     >
-                      {isSubscribed ? "Subscribed" : "Subscribe"}
+                      {isSubscribing ? "..." : isSubscribed ? "Subscribed" : "Subscribe"}
                     </button>
                   )}
                 </div>
