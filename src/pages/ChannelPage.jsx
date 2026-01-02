@@ -73,7 +73,7 @@ function ChannelPage() {
 
   if (!profileData) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-16 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+      <div className="min-h-screen bg-gray-50 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="flex items-center justify-center h-96">
           <p className="text-gray-500 text-lg">Channel not found</p>
         </div>
@@ -85,7 +85,7 @@ function ChannelPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="pt-16 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+      <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         {/* Cover Image */}
         <div className="w-full h-32 sm:h-48 lg:h-56 bg-gradient-to-r from-gray-300 to-gray-400 overflow-hidden">
           {coverUrl && (
@@ -248,7 +248,7 @@ function ChannelPage() {
 // Skeleton Loading
 function ChannelPageSkeleton() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 sm:pt-20 pb-20 sm:pb-8 sm:ml-64 animate-pulse">
+    <div className="min-h-screen bg-gray-50 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64 animate-pulse">
       <div className="w-full h-32 sm:h-48 lg:h-56 bg-gray-300"></div>
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-end gap-4 -mt-12">

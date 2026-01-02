@@ -26,7 +26,7 @@ function History() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="pt-16 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+      <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="flex items-center gap-3 mb-6">

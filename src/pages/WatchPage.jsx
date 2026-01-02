@@ -87,7 +87,7 @@ function WatchPage() {
 
   if (!video) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-16 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+      <div className="min-h-screen bg-gray-50 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="flex items-center justify-center h-96">
           <p className="text-gray-500 text-lg">Video not found</p>
         </div>
@@ -97,7 +97,7 @@ function WatchPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="pt-16 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+      <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="flex flex-col lg:flex-row gap-6 px-4 sm:px-6 lg:px-8">
           {/* Main Video Section */}
           <div className="flex-1 max-w-full lg:max-w-[calc(100%-400px)]">
@@ -252,7 +252,7 @@ function WatchPage() {
 // Skeleton Loading Component
 function WatchPageSkeleton() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+    <div className="min-h-screen bg-gray-50 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
       <div className="flex flex-col lg:flex-row gap-6 px-4 sm:px-6 lg:px-8 animate-pulse">
         <div className="flex-1">
           <div className="w-full aspect-video bg-gray-300 rounded-xl"></div>

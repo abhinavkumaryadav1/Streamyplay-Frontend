@@ -86,7 +86,7 @@ function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main Content Area - adjusts for navbar and sidebar */}
-      <div className="pt-16 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+      <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Category Tags & Filter Button */}
           <div className="mb-6">
