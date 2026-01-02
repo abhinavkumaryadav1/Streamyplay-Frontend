@@ -11,15 +11,15 @@ const initialState = {
 
 export const toggleSubscription = createAsyncThunk(
     "toggleSubscription",
-    async (channelId) => {
+    async (channelId, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.post(
                 `/subscriptions/c/${channelId}`
             );
             return response.data.data;
         } catch (error) {
-            toast.error(error?.response?.data?.error);
-            throw error;
+            toast.error(error?.response?.data?.error || "Failed to update subscription");
+            return rejectWithValue(error?.response?.data);
         }
     }
 );
@@ -41,19 +41,20 @@ export const getUserChannelSubscribers = createAsyncThunk(
 
 export const getSubscribedChannels = createAsyncThunk(
     "getSubscribedChannels",
-    async (subscriberId) => {
+    async (subscriberId, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.get(
                 `/subscriptions/c/${subscriberId}`
             );
             return response.data.data;
         } catch (error) {
-            // Return empty array if no subscriptions found (404)
+            // Return empty array if no subscriptions found (404) or any error
             if (error?.response?.status === 404) {
                 return [];
             }
-            toast.error(error?.response?.data?.error);
-            throw error;
+            // Don't show toast for this - it's not critical
+            console.error("Failed to fetch subscribed channels:", error);
+            return rejectWithValue([]);
         }
     }
 );
@@ -82,7 +83,11 @@ const subscriptionSlice = createSlice({
         });
         builder.addCase(getSubscribedChannels.fulfilled, (state, action) => {
             state.loading = false;
-            state.subscribedChannels = action.payload;
+            state.subscribedChannels = action.payload || [];
+        });
+        builder.addCase(getSubscribedChannels.rejected, (state) => {
+            state.loading = false;
+            state.subscribedChannels = [];
         });
     },
 });

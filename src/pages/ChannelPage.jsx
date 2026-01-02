@@ -19,6 +19,7 @@ function ChannelPage() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribersCount, setSubscribersCount] = useState(0);
   const [activeTab, setActiveTab] = useState("videos");
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   // Refetch profile when username or userData changes (to get correct subscription status)
   useEffect(() => {
@@ -59,7 +60,8 @@ function ChannelPage() {
       // Fallback: verify against subscribedChannels list if user is logged in
       if (userData && subscribedChannels?.length > 0 && profileData._id) {
         const isInSubscribedList = subscribedChannels.some((item) => {
-          const channel = item.channel || item;
+          // Backend returns { subscribedChannel: { _id, username, ... } }
+          const channel = item.subscribedChannel || item.channel || item;
           return channel?._id === profileData._id;
         });
         subscribed = isInSubscribedList;
@@ -75,19 +77,30 @@ function ChannelPage() {
       navigate("/login");
       return;
     }
-    const result = await dispatch(toggleSubscription(profileData._id));
-    if (result.meta.requestStatus === "fulfilled") {
-      const newIsSubscribed = !isSubscribed;
-      const newSubscribersCount = newIsSubscribed ? subscribersCount + 1 : subscribersCount - 1;
-      setIsSubscribed(newIsSubscribed);
-      setSubscribersCount(newSubscribersCount);
-      // Update the profile data in Redux store to persist across refreshes
-      dispatch(updateProfileSubscription({
-        isSubscribed: newIsSubscribed,
-        subscribersCount: newSubscribersCount,
-      }));
-      // Refetch subscribed channels to keep the list in sync
-      dispatch(getSubscribedChannels(userData._id));
+    
+    if (isSubscribing) return; // Prevent double clicks
+    
+    setIsSubscribing(true);
+    try {
+      const result = await dispatch(toggleSubscription(profileData._id));
+      if (result.meta.requestStatus === "fulfilled") {
+        // Use the response from backend to determine subscription state
+        const newIsSubscribed = result.payload?.subscribed ?? !isSubscribed;
+        const newSubscribersCount = newIsSubscribed ? subscribersCount + 1 : Math.max(0, subscribersCount - 1);
+        setIsSubscribed(newIsSubscribed);
+        setSubscribersCount(newSubscribersCount);
+        // Update the profile data in Redux store to persist across refreshes
+        dispatch(updateProfileSubscription({
+          isSubscribed: newIsSubscribed,
+          subscribersCount: newSubscribersCount,
+        }));
+        // Refetch subscribed channels to keep the list in sync
+        dispatch(getSubscribedChannels(userData._id));
+      }
+    } catch (error) {
+      console.error("Subscription error:", error);
+    } finally {
+      setIsSubscribing(false);
     }
   };
 
@@ -187,13 +200,14 @@ function ChannelPage() {
               ) : (
                 <button
                   onClick={handleSubscribe}
-                  className={`px-6 py-2.5 rounded-full text-sm font-semibold transition ${
+                  disabled={isSubscribing}
+                  className={`px-6 py-2.5 rounded-full text-sm font-semibold transition disabled:opacity-70 disabled:cursor-not-allowed ${
                     isSubscribed
                       ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
                       : "bg-red-600 text-white hover:bg-red-700"
                   }`}
                 >
-                  {isSubscribed ? "Subscribed" : "Subscribe"}
+                  {isSubscribing ? "..." : isSubscribed ? "Subscribed" : "Subscribe"}
                 </button>
               )}
             </div>
