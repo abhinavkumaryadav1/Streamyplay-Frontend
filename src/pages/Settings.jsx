@@ -7,6 +7,7 @@ import {
   updateCoverImg,
   updateUserDetails,
   changePassword,
+  userLogout,
 } from "../Store/Slices/authSlice";
 import {
   MdSettings,
@@ -17,6 +18,7 @@ import {
   MdCameraAlt,
   MdCheck,
   MdClose,
+  MdLogout,
 } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
 
@@ -97,6 +99,23 @@ function Settings() {
             {activeTab === "profile" && <ProfileSection userData={userData} loading={loading} dispatch={dispatch} />}
             {activeTab === "images" && <ImagesSection userData={userData} loading={loading} dispatch={dispatch} />}
             {activeTab === "password" && <PasswordSection loading={loading} dispatch={dispatch} />}
+          </div>
+
+          {/* Logout Section */}
+          <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900">Sign Out</h3>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1">Sign out from your account on this device</p>
+              </div>
+              <button
+                onClick={() => dispatch(userLogout())}
+                className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition text-sm sm:text-base"
+              >
+                <MdLogout className="text-lg" />
+                <span>Logout</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -1,13 +1,11 @@
 ﻿import { BiLike } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
-import {MdHome,MdSubscriptions,MdHistory,MdSettings, MdLogout} from "react-icons/md";
-import { NavLink, useNavigate } from "react-router-dom";
+import {MdHome,MdSubscriptions,MdHistory,MdSettings} from "react-icons/md";
+import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { userLogout } from "../Store/Slices/authSlice";
 import { openAuthModal } from "../Store/Slices/uiSlice";
 
 function Sidebar() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.userData);
 
@@ -21,11 +19,6 @@ function Sidebar() {
     { icon: <RxDashboard />, text: "My Dashboard", url: "/dashboard", requiresAuth: true },
     { icon: <MdHistory />, text: "History", url: "/history", requiresAuth: true },
   ];
-
-  const handleLogout = async () => {
-    await dispatch(userLogout());
-    navigate("/");
-  };
 
   const handleMenuClick = (e, item) => {
     if (item.requiresAuth && !userData) {
@@ -81,15 +74,6 @@ function Sidebar() {
               </div>
             )}
           </NavLink>
-          {userData && (
-            <div
-              className="flex items-center gap-5 p-4 rounded-lg cursor-pointer bg-white hover:bg-gray-200 transition shadow-sm mt-2"
-              onClick={handleLogout}
-            >
-              <span className="text-2xl"><MdLogout /></span>
-              <span className="text-base font-semibold">Logout</span>
-            </div>
-          )}
         </div>
       </div>
     </div>

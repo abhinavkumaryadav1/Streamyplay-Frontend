@@ -1,17 +1,20 @@
-import { IoSearch, IoClose } from "react-icons/io5";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { IoSearch, IoClose, IoFilter, IoEllipsisVertical } from "react-icons/io5";
+import { useNavigate, useSearchParams, Link, useLocation } from "react-router-dom";
 import { FaBars, FaUserCircle } from "react-icons/fa";
 import { MdKeyboardVoice, MdLogout, MdSettings } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import { userLogout } from "../Store/Slices/authSlice";
+import { toggleFilters } from "../Store/Slices/uiSlice";
 import { useState, useEffect, useRef, useCallback } from "react";
 import axiosInstance from "../helper/axiosInstance";
 import debounce from "../helper/debounce";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.userData);
+  const { showFilters, sortBy, sortType } = useSelector((state) => state.ui);
   const [searchParams] = useSearchParams();
 
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
@@ -19,12 +22,34 @@ export default function Navbar() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const searchRef = useRef(null);
   const inputRef = useRef(null);
+  const mobileMenuRef = useRef(null);
+
+  // Check if we're on home page to show filter button
+  const isHomePage = location.pathname === "/";
+  const hasActiveFilters = sortBy !== "createdAt" || sortType !== "desc";
 
   const handleLogout = () => {
     dispatch(userLogout());
   };
+
+  const handleFilterClick = () => {
+    dispatch(toggleFilters());
+    setShowMobileMenu(false);
+  };
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setShowMobileMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Debounced search function
   const fetchSuggestions = useCallback(
@@ -223,7 +248,25 @@ export default function Navbar() {
       </div>
 
       {/* Right section - Auth Buttons */}
-      <div className="flex items-center gap-2 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Filter Button - Desktop only, on home page */}
+        {isHomePage && (
+          <button
+            onClick={handleFilterClick}
+            className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-full border transition font-medium text-sm ${
+              showFilters || hasActiveFilters
+                ? "bg-gray-900 text-white border-gray-900"
+                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+            }`}
+          >
+            <IoFilter className="text-lg" />
+            <span>Filters</span>
+            {hasActiveFilters && (
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+            )}
+          </button>
+        )}
+
         {!userData && (
           <button
             className="text-xs sm:text-sm font-medium px-2 sm:px-4 py-1 sm:py-2 border border-blue-600 text-blue-600 rounded-full hover:bg-blue-50"
@@ -239,21 +282,44 @@ export default function Navbar() {
             Sign Up
           </button>
         )}
-        {userData && (
+
+        {/* 3-dot menu - Mobile only */}
+        <div className="relative sm:hidden" ref={mobileMenuRef}>
           <button
-            className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-medium px-2 sm:px-4 py-1 sm:py-2 border border-red-600 text-red-600 rounded-full hover:bg-red-50"
-            onClick={handleLogout}
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="p-2 hover:bg-gray-100 rounded-full transition"
           >
-            <MdLogout className="text-base sm:text-lg" /> Logout
+            <IoEllipsisVertical className="text-xl text-gray-600" />
           </button>
-        )}
-        {/* Settings icon - visible on mobile only */}
-        <Link
-          to="/settings"
-          className="sm:hidden p-2 hover:bg-gray-100 rounded-full transition"
-        >
-          <MdSettings className="text-xl text-gray-600" />
-        </Link>
+
+          {showMobileMenu && (
+            <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50 min-w-[160px]">
+              {isHomePage && (
+                <button
+                  onClick={handleFilterClick}
+                  className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-left ${
+                    showFilters || hasActiveFilters ? "text-blue-600" : "text-gray-700"
+                  }`}
+                >
+                  <IoFilter className="text-lg" />
+                  <span className="text-sm font-medium">Filters</span>
+                  {hasActiveFilters && (
+                    <span className="w-2 h-2 bg-blue-500 rounded-full ml-auto"></span>
+                  )}
+                </button>
+              )}
+              <Link
+                to="/settings"
+                onClick={() => setShowMobileMenu(false)}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-gray-700"
+              >
+                <MdSettings className="text-lg" />
+                <span className="text-sm font-medium">Settings</span>
+              </Link>
+            </div>
+          )}
+        </div>
+
         {userData && userData.avatar ? (
           <Link to={`/channel/${userData.username}`}>
             <img

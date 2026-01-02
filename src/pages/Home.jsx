@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllVideos, makeVideosNull } from "../Store/Slices/videoSlice";
+import { setFilters, resetFilters as resetUIFilters } from "../Store/Slices/uiSlice";
 import VideoGrid from "../components/VideoGrid";
-import { IoFilter, IoClose, IoChevronDown } from "react-icons/io5";
+import { IoClose, IoChevronDown } from "react-icons/io5";
 
 const SORT_OPTIONS = [
   { label: "Upload date (newest)", sortBy: "createdAt", sortType: "desc" },
@@ -16,13 +17,10 @@ const SORT_OPTIONS = [
 function Home() {
   const dispatch = useDispatch();
   const { videos, loading } = useSelector((state) => state.video);
+  const { showFilters, sortBy, sortType } = useSelector((state) => state.ui);
   const [page, setPage] = useState(1);
   const limit = 12;
 
-  // Filter states
-  const [showFilters, setShowFilters] = useState(false);
-  const [sortBy, setSortBy] = useState("createdAt");
-  const [sortType, setSortType] = useState("desc");
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const sortDropdownRef = useRef(null);
 
@@ -71,14 +69,12 @@ function Home() {
   }, [dispatch, page, sortBy, sortType]);
 
   const handleSortChange = (option) => {
-    setSortBy(option.sortBy);
-    setSortType(option.sortType);
+    dispatch(setFilters({ sortBy: option.sortBy, sortType: option.sortType }));
     setShowSortDropdown(false);
   };
 
   const resetFilters = () => {
-    setSortBy("createdAt");
-    setSortType("desc");
+    dispatch(resetUIFilters());
   };
 
   const hasActiveFilters = sortBy !== "createdAt" || sortType !== "desc";
@@ -88,28 +84,9 @@ function Home() {
       {/* Main Content Area - adjusts for navbar and sidebar */}
       <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="px-4 sm:px-6 lg:px-8">
-          {/* Category Tags & Filter Button */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between gap-4 mb-4">
-              {/* Filter Button */}
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition font-medium text-sm shrink-0 ${
-                  showFilters || hasActiveFilters
-                    ? "bg-gray-900 text-white border-gray-900"
-                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                }`}
-              >
-                <IoFilter className="text-lg" />
-                <span className="hidden sm:inline">Filters</span>
-                {hasActiveFilters && (
-                  <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                )}
-              </button>
-            </div>
-
-            {/* Filter Panel */}
-            {showFilters && (
+          {/* Filter Panel - controlled from Navbar */}
+          {showFilters && (
+            <div className="mb-6">
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex flex-wrap items-center gap-4">
@@ -178,8 +155,8 @@ function Home() {
                   </div>
                 )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Video Grid */}
           <VideoGrid
@@ -191,21 +168,6 @@ function Home() {
         </div>
       </div>
     </div>
-  );
-}
-
-// Category Tag Component
-function CategoryTag({ label, active = false }) {
-  return (
-    <button
-      className={`px-4 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
-        active
-          ? "bg-gray-900 text-white"
-          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-      }`}
-    >
-      {label}
-    </button>
   );
 }
 
