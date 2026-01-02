@@ -8,6 +8,7 @@ import { openAuthModal } from "../Store/Slices/uiSlice";
 import { formatDistanceToNow } from "../helper/timeUtils";
 import CommentSection from "../components/CommentSection";
 import VideoCardHorizontal from "../components/VideoCardHorizontal";
+import VideoPlayer from "../components/VideoPlayer";
 import { BiLike, BiDislike, BiShare } from "react-icons/bi";
 import { RiPlayListAddLine } from "react-icons/ri";
 import { HiDotsHorizontal } from "react-icons/hi";
@@ -24,6 +25,7 @@ function WatchPage() {
   const [likesCount, setLikesCount] = useState(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [theaterMode, setTheaterMode] = useState(false);
 
   useEffect(() => {
     if (videoId) {
@@ -130,20 +132,37 @@ function WatchPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
-        <div className="flex flex-col lg:flex-row gap-6 px-4 sm:px-6 lg:px-8">
-          {/* Main Video Section */}
-          <div className="flex-1 max-w-full lg:max-w-[calc(100%-400px)]">
-            {/* Video Player */}
-            <div className="w-full aspect-video bg-black rounded-xl overflow-hidden">
-              <video
-                src={videoUrl}
-                poster={thumbnailUrl}
-                controls
-                autoPlay
-                className="w-full h-full object-contain"
-              />
+      <div className={`pt-28 sm:pt-20 pb-20 sm:pb-8 ${theaterMode ? "" : "sm:ml-64"}`}>
+        {/* Theater Mode Video */}
+        {theaterMode && (
+          <div className="w-full bg-black mb-6">
+            <div className="max-w-[1800px] mx-auto">
+              <div className="aspect-video">
+                <VideoPlayer
+                  src={videoUrl}
+                  poster={thumbnailUrl}
+                  theaterMode={theaterMode}
+                  onTheaterModeChange={setTheaterMode}
+                />
+              </div>
             </div>
+          </div>
+        )}
+
+        <div className={`flex flex-col lg:flex-row gap-6 px-4 sm:px-6 lg:px-8 ${theaterMode ? "max-w-[1800px] mx-auto sm:ml-64" : ""}`}>
+          {/* Main Video Section */}
+          <div className={`flex-1 ${theaterMode ? "" : "max-w-full lg:max-w-[calc(100%-400px)]"}`}>
+            {/* Video Player - Only show here if not theater mode */}
+            {!theaterMode && (
+              <div className="w-full aspect-video">
+                <VideoPlayer
+                  src={videoUrl}
+                  poster={thumbnailUrl}
+                  theaterMode={theaterMode}
+                  onTheaterModeChange={setTheaterMode}
+                />
+              </div>
+            )}
 
             {/* Video Info */}
             <div className="mt-4">
