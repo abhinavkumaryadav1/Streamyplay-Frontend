@@ -1,8 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { formatDistanceToNow } from "../helper/timeUtils";
+import { openAuthModal } from "../Store/Slices/uiSlice";
 
 function VideoCardHorizontal({ video }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.auth);
+  
   const {
     _id,
     thumbnail,
@@ -47,8 +53,16 @@ function VideoCardHorizontal({ video }) {
     return `${count} views`;
   };
 
+  // Handle video click - check auth before navigating
+  const handleVideoClick = (e) => {
+    if (!userData) {
+      e.preventDefault();
+      dispatch(openAuthModal("Please sign in to watch videos"));
+    }
+  };
+
   return (
-    <Link to={`/watch/${_id}`} className="block group">
+    <Link to={`/watch/${_id}`} className="block group" onClick={handleVideoClick}>
       <div className="flex gap-3 w-full">
         {/* Thumbnail Container */}
         <div className="relative flex-shrink-0 w-40 sm:w-44 aspect-video rounded-lg overflow-hidden bg-gray-200">

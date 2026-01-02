@@ -1,8 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { formatDistanceToNow } from "../helper/timeUtils";
+import { openAuthModal } from "../Store/Slices/uiSlice";
 
 function VideoCard({ video }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userData } = useSelector((state) => state.auth);
+  
   const {
     _id,
     thumbnail,
@@ -46,8 +52,16 @@ function VideoCard({ video }) {
   // Get avatar URL (handle both string and object formats)
   const avatarUrl = typeof owner?.avatar === "string" ? owner?.avatar : owner?.avatar?.url;
 
+  // Handle video click - check auth before navigating
+  const handleVideoClick = (e) => {
+    if (!userData) {
+      e.preventDefault();
+      dispatch(openAuthModal("Please sign in to watch videos"));
+    }
+  };
+
   return (
-    <Link to={`/watch/${_id}`} className="block group">
+    <Link to={`/watch/${_id}`} className="block group" onClick={handleVideoClick}>
       <div className="flex flex-col w-full">
         {/* Thumbnail Container */}
         <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-200">
