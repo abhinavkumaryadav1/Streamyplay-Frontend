@@ -1,22 +1,29 @@
 import axios from "axios";
-import { store } from "../Store/store";
-import { openAuthModal } from "../Store/Slices/uiSlice";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: true,
 });
 
+// Store reference will be set after store is created
+let storeRef = null;
+
+export const setStore = (store) => {
+  storeRef = store;
+};
+
 // Response interceptor to handle 401 unauthorized errors
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && storeRef) {
       // Check if user is not logged in
-      const state = store.getState();
+      const state = storeRef.getState();
       if (!state.auth.userData) {
-        // Dispatch action to show auth modal
-        store.dispatch(openAuthModal("Please sign in to access this content"));
+        // Dynamically import to avoid circular dependency
+        import("../Store/Slices/uiSlice").then(({ openAuthModal }) => {
+          storeRef.dispatch(openAuthModal("Please sign in to access this content"));
+        });
       }
     }
     return Promise.reject(error);
