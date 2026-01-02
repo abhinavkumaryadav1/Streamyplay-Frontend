@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { FaVideo } from "react-icons/fa";
 import { closeAuthModal } from "../Store/Slices/uiSlice";
@@ -8,12 +8,17 @@ import { closeAuthModal } from "../Store/Slices/uiSlice";
 function AuthModal() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const { showAuthModal } = useSelector((state) => state.ui);
 
   if (!showAuthModal) return null;
 
   const handleClose = () => {
     dispatch(closeAuthModal());
+    // Navigate to home if user is on a protected route
+    if (location.pathname !== "/") {
+      navigate("/");
+    }
   };
 
   const handleOverlayClick = (e) => {
