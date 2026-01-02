@@ -206,6 +206,7 @@ const authSlice = createSlice({
         builder.addCase(updateAvatar.fulfilled, (state, action) => {
             state.loading = false;
             state.userData = action.payload;
+            localStorage.setItem("userData", JSON.stringify(action.payload));
         });
         builder.addCase(updateAvatar.rejected, (state) => {
             state.loading = false;
@@ -216,6 +217,7 @@ const authSlice = createSlice({
         builder.addCase(updateCoverImg.fulfilled, (state, action) => {
             state.loading = false;
             state.userData = action.payload;
+            localStorage.setItem("userData", JSON.stringify(action.payload));
         });
         builder.addCase(updateCoverImg.rejected, (state) => {
             state.loading = false;
@@ -225,7 +227,11 @@ const authSlice = createSlice({
         });
         builder.addCase(updateUserDetails.fulfilled, (state, action) => {
             state.loading = false;
-            state.userData = action.payload;
+            state.userData = action.payload.data || action.payload;
+            localStorage.setItem("userData", JSON.stringify(state.userData));
+        });
+        builder.addCase(updateUserDetails.rejected, (state) => {
+            state.loading = false;
         });
     }
 });

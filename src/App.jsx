@@ -10,6 +10,7 @@ import Subscriptions from "./pages/Subscriptions";
 import Dashboard from "./pages/Dashboard";
 import History from "./pages/History";
 import SearchResults from "./pages/SearchResults";
+import Settings from "./pages/Settings";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -36,6 +37,7 @@ function App() {
           <Route path="subscriptions" element={<Subscriptions />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="history" element={<History />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />

@@ -73,10 +73,14 @@ function Sidebar() {
       </div>
       <div className="mt-auto mb-10">
         <div className="bg-gray-100 rounded-xl p-3 shadow-sm flex flex-col gap-2">
-          <div className="flex items-center gap-5 p-4 rounded-lg cursor-pointer bg-white hover:bg-gray-200 transition shadow-sm">
-            <span className="text-2xl"><MdSettings /></span>
-            <span className="text-base font-semibold">Settings</span>
-          </div>
+          <NavLink to="/settings">
+            {({ isActive }) => (
+              <div className={`flex items-center gap-5 p-4 rounded-lg cursor-pointer shadow-sm transition ${isActive ? 'bg-red-50 border-l-4 border-red-600' : 'bg-white hover:bg-gray-200'}`}>
+                <span className={`text-2xl ${isActive ? 'text-red-600' : ''}`}><MdSettings /></span>
+                <span className={`text-base font-semibold ${isActive ? 'text-red-600' : ''}`}>Settings</span>
+              </div>
+            )}
+          </NavLink>
           {userData && (
             <div
               className="flex items-center gap-5 p-4 rounded-lg cursor-pointer bg-white hover:bg-gray-200 transition shadow-sm mt-2"
