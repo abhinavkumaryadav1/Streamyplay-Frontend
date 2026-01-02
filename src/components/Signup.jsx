@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { createAccount, userLogin } from "../Store/Slices/authSlice.js";
@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import LoginSkeleton from "../skeleton/loginSkeleton.jsx";
 import GetImagePreview from "./GetImagePreview.jsx";
+import { FaCheckCircle, FaVideo, FaExclamationTriangle } from "react-icons/fa";
+import { MdWarning } from "react-icons/md";
 
 
 const Input = React.forwardRef(({ label, ...props }, ref) => (
@@ -40,6 +42,9 @@ function SignUp() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const loading = useSelector((state) => state.auth?.loading);
+    
+    const [showTermsModal, setShowTermsModal] = useState(false);
+    const [termsAccepted, setTermsAccepted] = useState(false);
 
     const submit = async (data) => {
         const response = await dispatch(createAccount(data));
@@ -51,11 +56,17 @@ function SignUp() {
             );
 
             if (loginResult?.type === "login/fulfilled") {
-                navigate("/");
+                // Show terms modal instead of navigating directly
+                setShowTermsModal(true);
             } else {
                 navigate("/login");
             }
         }
+    };
+
+    const handleContinue = () => {
+        setShowTermsModal(false);
+        navigate("/");
     };
 
     if (loading) {
@@ -63,6 +74,102 @@ function SignUp() {
     }
 
     return (
+        <>
+        {/* Terms and Conditions Modal */}
+        {showTermsModal && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-700">
+              {/* Header */}
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-center">
+                <div className="flex justify-center mb-3">
+                  <div className="p-3 bg-white/20 rounded-full">
+                    <FaCheckCircle className="text-3xl text-white" />
+                  </div>
+                </div>
+                <h2 className="text-2xl font-bold text-white">Welcome to StreamyPlay!</h2>
+                <p className="text-white/80 text-sm mt-1">Account created successfully</p>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <FaVideo className="text-purple-400" />
+                  <h3 className="text-lg font-semibold text-white">Terms and Conditions</h3>
+                </div>
+
+                <div className="bg-gray-800/50 rounded-xl p-4 space-y-3 border border-gray-700">
+                  <div className="flex items-start gap-3">
+                    <div className="p-1.5 bg-purple-500/20 rounded-lg mt-0.5">
+                      <FaExclamationTriangle className="text-purple-400 text-sm" />
+                    </div>
+                    <p className="text-gray-300 text-sm">This is my personal project.</p>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="p-1.5 bg-blue-500/20 rounded-lg mt-0.5">
+                      <MdWarning className="text-blue-400 text-sm" />
+                    </div>
+                    <p className="text-gray-300 text-sm">This web app is still in development.</p>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="p-1.5 bg-amber-500/20 rounded-lg mt-0.5">
+                      <MdWarning className="text-amber-400 text-sm" />
+                    </div>
+                    <p className="text-gray-300 text-sm">
+                      <span className="text-amber-400 font-medium">Do not upload videos greater than 100 MB</span> or else it will not upload on cloud.
+                    </p>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <div className="p-1.5 bg-red-500/20 rounded-lg mt-0.5">
+                      <FaExclamationTriangle className="text-red-400 text-sm" />
+                    </div>
+                    <p className="text-gray-300 text-sm">
+                      <span className="text-red-400 font-medium">Upload no content that is illegal and A rated.</span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Checkbox */}
+                <label className="flex items-center gap-3 mt-5 cursor-pointer group">
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={termsAccepted}
+                      onChange={(e) => setTermsAccepted(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-6 h-6 border-2 border-gray-500 rounded-md peer-checked:border-purple-500 peer-checked:bg-purple-500 transition-all flex items-center justify-center">
+                      {termsAccepted && (
+                        <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-gray-300 text-sm group-hover:text-white transition">
+                    I agree to the terms and conditions
+                  </span>
+                </label>
+
+                {/* Continue Button */}
+                <div className={`mt-6 transition-all duration-300 ${termsAccepted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+                  <button
+                    onClick={handleContinue}
+                    className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-purple-500/25 flex items-center justify-center gap-2"
+                  >
+                    <span>Continue to StreamyPlay</span>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="w-full min-h-screen text-white p-2 sm:p-3 flex justify-center items-start sm:mt-8 bg-gradient-to-br from-purple-400/30 to-indigo-300/30">
             <div className="flex flex-col space-y-2 justify-center items-center border border-slate-600 p-2 sm:p-3 w-full max-w-xs sm:max-w-md rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-md shadow-lg">
                 <form
@@ -172,6 +279,7 @@ function SignUp() {
                 </form>
             </div>
         </div>
+        </>
     );
 }
 
