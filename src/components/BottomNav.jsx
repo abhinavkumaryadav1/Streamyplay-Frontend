@@ -25,7 +25,7 @@ export default function BottomNav() {
           }
         >
           <span className="text-2xl mb-0.5">{item.icon}</span>
-          <span className="leading-tight text-center break-words max-w-[65px]">{item.label}</span>
+          <span className="leading-tight text-center break-words max-w-[70px]">{item.label}</span>
         </NavLink>
       ))}
     </nav>

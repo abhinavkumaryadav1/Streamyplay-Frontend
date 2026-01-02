@@ -69,45 +69,75 @@ export const userLogout = createAsyncThunk("logout", async () => {
 
 export const refreshAccessToken = createAsyncThunk("refreshAccessToken", async (data)=>{
     try {
-        
+        const response = await axiosInstance.post(
+                "/user/refresh-token",
+                data
+            );
+            return response.data;
     } catch (error) {
-        
+        toast.error(error?.response?.data?.error);
+            throw error;
     }
 })
 
 export const changePassword = createAsyncThunk("changePassword", async(data)=>{
     try {
-        
+         const response = await axiosInstance.post(
+                "/user/change-password",
+                data
+            );
+            toast.success(response.data?.message);
+            return response.data;
     } catch (error) {
-        
+        toast.error(error?.response?.data?.error);
+            throw error;
     }
 })
 
 export const getCurrentUser = createAsyncThunk("getCurrentUser", async ()=>{
-    
+    const response = await axiosInstance.get("/user/current-user");
+    return response.data.data;
 })
 
 export const updateAvatar = createAsyncThunk("updateAvatar", async (avatar)=>{
     try {
-        
+        const response = await axiosInstance.patch(
+            "/user/avatar",
+            avatar
+        );
+        toast.success("Updated details successfully!!!");
+        return response.data.data;
     } catch (error) {
-        
+        toast.error(error?.response?.data?.error);
+        throw error;
     }
 })
 
 export const updateCoverImg = createAsyncThunk("updateCoverImg", async (coverImage)=>{
     try {
-        
+        const response = await axiosInstance.patch(
+                "/user/cover-image",
+                coverImage
+            );
+            toast.success(response.data?.message);
+            return response.data.data;
     } catch (error) {
-        
+        toast.error(error?.response?.data?.error);
+            throw error;
     }
 })
 
 export const updateUserDetails = createAsyncThunk("updateUserDetails", async(data)=>{
     try {
-        
+        const response = await axiosInstance.patch(
+                "/user/update-account",
+                data
+            );
+            toast.success("Updated details successfully!!!");
+            return response.data;
     } catch (error) {
-        
+        toast.error(error?.response?.data?.error);
+            throw error;
     }
 })
 
@@ -156,6 +186,46 @@ const authSlice = createSlice({
             localStorage.removeItem("userData");
             localStorage.removeItem("status");
             toast.success(action.payload?.message || "Logged out successfully");
+        });
+        builder.addCase(getCurrentUser.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(getCurrentUser.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            state.userData = action.payload;
+        });
+        builder.addCase(getCurrentUser.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+            state.userData = null;
+        });
+        builder.addCase(updateAvatar.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(updateAvatar.fulfilled, (state, action) => {
+            state.loading = false;
+            state.userData = action.payload;
+        });
+        builder.addCase(updateAvatar.rejected, (state) => {
+            state.loading = false;
+        });
+        builder.addCase(updateCoverImg.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(updateCoverImg.fulfilled, (state, action) => {
+            state.loading = false;
+            state.userData = action.payload;
+        });
+        builder.addCase(updateCoverImg.rejected, (state) => {
+            state.loading = false;
+        });
+        builder.addCase(updateUserDetails.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(updateUserDetails.fulfilled, (state, action) => {
+            state.loading = false;
+            state.userData = action.payload;
         });
     }
 });

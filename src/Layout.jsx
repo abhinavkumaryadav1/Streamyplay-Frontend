@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import BottomNav from "./components/BottomNav";
 import MobileSearchBar from "./components/MobileSearchBar";
+import AuthModal from "./components/AuthModal";
 
 function Layout() {
     return (
@@ -18,6 +19,7 @@ function Layout() {
                 </div>
             </div>
             <BottomNav />
+            <AuthModal />
         </>
     );
 }
