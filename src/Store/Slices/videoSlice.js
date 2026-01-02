@@ -149,6 +149,12 @@ const videoSlice = createSlice({
         setUploadProgress: (state, action) => {
             state.uploadProgress = action.payload;
         },
+        updateVideoOwnerSubscription: (state, action) => {
+            if (state.video?.owner) {
+                state.video.owner.isSubscribed = action.payload.isSubscribed;
+                state.video.owner.subscribersCount = action.payload.subscribersCount;
+            }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getAllVideos.pending, (state) => {
@@ -197,6 +203,6 @@ const videoSlice = createSlice({
 
 
 
-export const { updateUploadState, makeVideosNull, setUploadProgress } = videoSlice.actions;
+export const { updateUploadState, makeVideosNull, setUploadProgress, updateVideoOwnerSubscription } = videoSlice.actions;
 
 export default videoSlice.reducer;

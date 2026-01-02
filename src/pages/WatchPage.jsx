@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getVideoById } from "../Store/Slices/videoSlice";
+import { getVideoById, updateVideoOwnerSubscription } from "../Store/Slices/videoSlice";
 import { toggleVideoLike } from "../Store/Slices/likeSlice";
 import { toggleSubscription } from "../Store/Slices/subscriptionSlice";
 import { openAuthModal } from "../Store/Slices/uiSlice";
@@ -54,8 +54,18 @@ function WatchPage() {
       return;
     }
     if (!video?.owner?._id) return;
-    await dispatch(toggleSubscription(video.owner._id));
-    setIsSubscribed(!isSubscribed);
+    const result = await dispatch(toggleSubscription(video.owner._id));
+    if (result.meta.requestStatus === "fulfilled") {
+      const newIsSubscribed = !isSubscribed;
+      const currentCount = video.owner?.subscribersCount || 0;
+      const newSubscribersCount = newIsSubscribed ? currentCount + 1 : currentCount - 1;
+      setIsSubscribed(newIsSubscribed);
+      // Update the video owner data in Redux store to persist across refreshes
+      dispatch(updateVideoOwnerSubscription({
+        isSubscribed: newIsSubscribed,
+        subscribersCount: newSubscribersCount,
+      }));
+    }
   };
 
   const formatViews = (count) => {

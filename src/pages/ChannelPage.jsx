@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { userChannelProfile } from "../Store/Slices/userSlice";
+import { userChannelProfile, updateProfileSubscription } from "../Store/Slices/userSlice";
 import { getAllVideos, makeVideosNull } from "../Store/Slices/videoSlice";
 import { toggleSubscription } from "../Store/Slices/subscriptionSlice";
 import VideoCard from "../components/VideoCard";
@@ -47,9 +47,18 @@ function ChannelPage() {
       navigate("/login");
       return;
     }
-    await dispatch(toggleSubscription(profileData._id));
-    setIsSubscribed(!isSubscribed);
-    setSubscribersCount(isSubscribed ? subscribersCount - 1 : subscribersCount + 1);
+    const result = await dispatch(toggleSubscription(profileData._id));
+    if (result.meta.requestStatus === "fulfilled") {
+      const newIsSubscribed = !isSubscribed;
+      const newSubscribersCount = newIsSubscribed ? subscribersCount + 1 : subscribersCount - 1;
+      setIsSubscribed(newIsSubscribed);
+      setSubscribersCount(newSubscribersCount);
+      // Update the profile data in Redux store to persist across refreshes
+      dispatch(updateProfileSubscription({
+        isSubscribed: newIsSubscribed,
+        subscribersCount: newSubscribersCount,
+      }));
+    }
   };
 
   const formatCount = (count) => {
