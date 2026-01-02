@@ -94,9 +94,18 @@ export const changePassword = createAsyncThunk("changePassword", async(data)=>{
     }
 })
 
-export const getCurrentUser = createAsyncThunk("getCurrentUser", async ()=>{
-    const response = await axiosInstance.get("/user/current-user");
-    return response.data.data;
+export const getCurrentUser = createAsyncThunk("getCurrentUser", async (_, { rejectWithValue })=>{
+    try {
+        const response = await axiosInstance.get("/user/current-user");
+        return response.data.data;
+    } catch (error) {
+        // If unauthorized, clear local storage to sync state
+        if (error.response?.status === 401) {
+            localStorage.removeItem("userData");
+            localStorage.removeItem("status");
+        }
+        return rejectWithValue(error.response?.data?.message || "Failed to get user");
+    }
 })
 
 export const updateAvatar = createAsyncThunk("updateAvatar", async (avatar)=>{
@@ -148,6 +157,21 @@ const authSlice = createSlice({
         setUser: (state, action) => {
             state.userData = action.payload.userData;
             state.status = action.payload.status;
+            // Sync to localStorage when setting user
+            if (action.payload.userData) {
+                localStorage.setItem("userData", JSON.stringify(action.payload.userData));
+                localStorage.setItem("status", String(action.payload.status));
+            } else {
+                localStorage.removeItem("userData");
+                localStorage.removeItem("status");
+            }
+        },
+        forceLogout: (state) => {
+            state.loading = false;
+            state.status = false;
+            state.userData = null;
+            localStorage.removeItem("userData");
+            localStorage.removeItem("status");
         },
     },
     extraReducers: (builder) => {
@@ -236,5 +260,5 @@ const authSlice = createSlice({
     }
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, forceLogout } = authSlice.actions;
 export default authSlice.reducer;

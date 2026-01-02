@@ -91,22 +91,6 @@ function Home() {
           {/* Category Tags & Filter Button */}
           <div className="mb-6">
             <div className="flex items-center justify-between gap-4 mb-4">
-              {/* Category Tags */}
-              <div className="flex-1 overflow-x-auto scrollbar-hide">
-                <div className="flex gap-3 pb-2">
-                  
-                  <CategoryTag label="All" active />
-                  <CategoryTag label="Music" />
-                  <CategoryTag label="Gaming" />
-                  <CategoryTag label="News" />
-                  <CategoryTag label="Sports" />
-                  <CategoryTag label="Entertainment" />
-                  <CategoryTag label="Education" />
-                  <CategoryTag label="Technology" />
-                  <CategoryTag label="Comedy" />
-                </div>
-              </div>
-
               {/* Filter Button */}
               <button
                 onClick={() => setShowFilters(!showFilters)}
