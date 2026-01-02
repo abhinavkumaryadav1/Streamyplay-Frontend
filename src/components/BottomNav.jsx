@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { MdHome, MdSubscriptions, MdHistory } from "react-icons/md";
+import { MdHome, MdSubscriptions, MdHistory, MdSettings } from "react-icons/md";
 import { BiLike } from "react-icons/bi";
 import { RxDashboard } from "react-icons/rx";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,9 +8,9 @@ import { openAuthModal } from "../Store/Slices/uiSlice";
 const navItems = [
   { to: "/", icon: <MdHome />, label: "Home", requiresAuth: false },
   { to: "/liked-videos", icon: <BiLike />, label: "Liked", requiresAuth: true },
-  { to: "/subscriptions", icon: <MdSubscriptions />, label: "Subscriptions", requiresAuth: true },
+  { to: "/subscriptions", icon: <MdSubscriptions />, label: "Subs", requiresAuth: true },
   { to: "/dashboard", icon: <RxDashboard />, label: "Dashboard", requiresAuth: true },
-  { to: "/history", icon: <MdHistory />, label: "History", requiresAuth: true },
+  { to: "/settings", icon: <MdSettings />, label: "Settings", requiresAuth: false },
 ];
 
 export default function BottomNav() {

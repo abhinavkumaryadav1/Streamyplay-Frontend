@@ -52,47 +52,48 @@ function Settings() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
-        <div className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+      <div className="pt-16 sm:pt-20 pb-24 sm:pb-8 sm:ml-64">
+        <div className="px-3 sm:px-6 lg:px-8 max-w-4xl mx-auto">
           {/* Header */}
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
             <button
               onClick={() => navigate(-1)}
               className="p-2 hover:bg-gray-200 rounded-full transition"
             >
               <BiArrowBack className="text-xl" />
             </button>
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg">
-                <MdSettings className="text-2xl text-white" />
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg">
+                <MdSettings className="text-xl sm:text-2xl text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-                <p className="text-sm text-gray-600">Manage your account</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Settings</h1>
+                <p className="text-xs sm:text-sm text-gray-600">Manage your account</p>
               </div>
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+          <div className="flex gap-2 mb-4 sm:mb-6 overflow-x-auto pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition ${
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition ${
                   activeTab === tab.id
                     ? "bg-gray-900 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <tab.icon className="text-lg" />
-                {tab.label}
+                <tab.icon className="text-base sm:text-lg" />
+                <span className="hidden xs:inline sm:inline">{tab.label}</span>
+                <span className="xs:hidden sm:hidden">{tab.id === 'images' ? 'Images' : tab.label}</span>
               </button>
             ))}
           </div>
 
           {/* Tab Content */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
             {activeTab === "profile" && <ProfileSection userData={userData} loading={loading} dispatch={dispatch} />}
             {activeTab === "images" && <ImagesSection userData={userData} loading={loading} dispatch={dispatch} />}
             {activeTab === "password" && <PasswordSection loading={loading} dispatch={dispatch} />}
@@ -122,53 +123,53 @@ function ProfileSection({ userData, loading, dispatch }) {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-        <MdPerson className="text-xl" />
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
+        <MdPerson className="text-lg sm:text-xl" />
         Profile Information
       </h2>
-      <p className="text-sm text-gray-600 mb-6">
+      <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
         Update your personal information
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
         {/* Username (read-only) */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
             Username
           </label>
           <input
             type="text"
             value={`@${userData.username}`}
             disabled
-            className="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed text-sm"
           />
-          <p className="text-xs text-gray-500 mt-1">Username cannot be changed</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 mt-1">Username cannot be changed</p>
         </div>
 
         {/* Full Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
             Full Name
           </label>
           <input
             type="text"
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
             placeholder="Enter your full name"
             {...register("fullName", { required: "Full name is required" })}
           />
           {errors.fullName && (
-            <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>
+            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.fullName.message}</p>
           )}
         </div>
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
             Email
           </label>
           <input
             type="email"
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
             placeholder="Enter your email"
             {...register("email", {
               required: "Email is required",
@@ -179,20 +180,20 @@ function ProfileSection({ userData, loading, dispatch }) {
             })}
           />
           {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.email.message}</p>
           )}
         </div>
 
         {/* Submit Button */}
-        <div className="pt-4">
+        <div className="pt-3 sm:pt-4">
           <button
             type="submit"
             disabled={loading || !isDirty}
-            className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 sm:px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
@@ -288,32 +289,32 @@ function ImagesSection({ userData, loading, dispatch }) {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-        <MdImage className="text-xl" />
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
+        <MdImage className="text-lg sm:text-xl" />
         Profile Images
       </h2>
-      <p className="text-sm text-gray-600 mb-6">
+      <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
         Update your avatar and cover image
       </p>
 
       {/* Avatar Section */}
-      <div className="mb-8">
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+      <div className="mb-6 sm:mb-8">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">
           Avatar
         </label>
-        <div className="flex items-center gap-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
           <div className="relative">
             <img
               src={avatarPreview || currentAvatar}
               alt="Avatar"
-              className={`w-24 h-24 rounded-full object-cover ${avatarPreview ? 'ring-4 ring-blue-500' : 'ring-2 ring-gray-200'}`}
+              className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover ${avatarPreview ? 'ring-4 ring-blue-500' : 'ring-2 ring-gray-200'}`}
             />
             <button
               type="button"
               onClick={() => avatarInputRef.current?.click()}
-              className="absolute bottom-0 right-0 p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
+              className="absolute bottom-0 right-0 p-1.5 sm:p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
             >
-              <MdCameraAlt className="text-sm" />
+              <MdCameraAlt className="text-xs sm:text-sm" />
             </button>
             <input
               ref={avatarInputRef}
@@ -326,16 +327,16 @@ function ImagesSection({ userData, loading, dispatch }) {
           
           {avatarFile && (
             <div className="flex flex-col gap-2">
-              <p className="text-sm text-gray-600">New avatar selected</p>
+              <p className="text-xs sm:text-sm text-gray-600">New avatar selected</p>
               <div className="flex gap-2">
                 <button
                   onClick={handleAvatarUpload}
                   disabled={uploadingAvatar}
-                  className="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-600 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
                 >
                   {uploadingAvatar ? (
                     <>
-                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <svg className="animate-spin h-3 w-3 sm:h-4 sm:w-4" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
@@ -350,7 +351,7 @@ function ImagesSection({ userData, loading, dispatch }) {
                 <button
                   onClick={cancelAvatarChange}
                   disabled={uploadingAvatar}
-                  className="flex items-center gap-1 px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-200 text-gray-700 text-xs sm:text-sm rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
                 >
                   <MdClose /> Cancel
                 </button>
@@ -362,12 +363,12 @@ function ImagesSection({ userData, loading, dispatch }) {
 
       {/* Cover Image Section */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">
           Cover Image
         </label>
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           <div className="relative">
-            <div className={`w-full h-32 sm:h-40 rounded-xl overflow-hidden ${coverPreview ? 'ring-4 ring-blue-500' : ''}`}>
+            <div className={`w-full h-28 sm:h-40 rounded-lg sm:rounded-xl overflow-hidden ${coverPreview ? 'ring-4 ring-blue-500' : ''}`}>
               {(coverPreview || currentCover) ? (
                 <img
                   src={coverPreview || currentCover}
@@ -376,16 +377,18 @@ function ImagesSection({ userData, loading, dispatch }) {
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-r from-gray-300 to-gray-400 flex items-center justify-center">
-                  <p className="text-gray-600">No cover image</p>
+                  <p className="text-xs sm:text-sm text-gray-600">No cover image</p>
                 </div>
               )}
             </div>
             <button
               type="button"
               onClick={() => coverInputRef.current?.click()}
-              className="absolute bottom-3 right-3 flex items-center gap-2 px-3 py-2 bg-gray-900/80 text-white text-sm rounded-lg hover:bg-gray-900 transition"
+              className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-gray-900/80 text-white text-xs sm:text-sm rounded-lg hover:bg-gray-900 transition"
             >
-              <MdCameraAlt /> Change Cover
+              <MdCameraAlt className="text-xs sm:text-sm" /> 
+              <span className="hidden xs:inline">Change Cover</span>
+              <span className="xs:hidden">Change</span>
             </button>
             <input
               ref={coverInputRef}
@@ -397,17 +400,17 @@ function ImagesSection({ userData, loading, dispatch }) {
           </div>
           
           {coverFile && (
-            <div className="flex items-center gap-3">
-              <p className="text-sm text-gray-600">New cover image selected</p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <p className="text-xs sm:text-sm text-gray-600">New cover image selected</p>
               <div className="flex gap-2">
                 <button
                   onClick={handleCoverUpload}
                   disabled={uploadingCover}
-                  className="flex items-center gap-1 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-600 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
                 >
                   {uploadingCover ? (
                     <>
-                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <svg className="animate-spin h-3 w-3 sm:h-4 sm:w-4" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
@@ -422,7 +425,7 @@ function ImagesSection({ userData, loading, dispatch }) {
                 <button
                   onClick={cancelCoverChange}
                   disabled={uploadingCover}
-                  className="flex items-center gap-1 px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-200 text-gray-700 text-xs sm:text-sm rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
                 >
                   <MdClose /> Cancel
                 </button>
@@ -461,39 +464,39 @@ function PasswordSection({ loading, dispatch }) {
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-        <MdLock className="text-xl" />
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
+        <MdLock className="text-lg sm:text-xl" />
         Change Password
       </h2>
-      <p className="text-sm text-gray-600 mb-6">
+      <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
         Update your password to keep your account secure
       </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 max-w-md">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5 max-w-md">
         {/* Current Password */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
             Current Password
           </label>
           <input
             type={showPasswords ? "text" : "password"}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
             placeholder="Enter current password"
             {...register("oldPassword", { required: "Current password is required" })}
           />
           {errors.oldPassword && (
-            <p className="text-red-500 text-sm mt-1">{errors.oldPassword.message}</p>
+            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.oldPassword.message}</p>
           )}
         </div>
 
         {/* New Password */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
             New Password
           </label>
           <input
             type={showPasswords ? "text" : "password"}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
             placeholder="Enter new password"
             {...register("newPassword", {
               required: "New password is required",
@@ -504,18 +507,18 @@ function PasswordSection({ loading, dispatch }) {
             })}
           />
           {errors.newPassword && (
-            <p className="text-red-500 text-sm mt-1">{errors.newPassword.message}</p>
+            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.newPassword.message}</p>
           )}
         </div>
 
         {/* Confirm Password */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
             Confirm New Password
           </label>
           <input
             type={showPasswords ? "text" : "password"}
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
             placeholder="Confirm new password"
             {...register("confirmPassword", {
               required: "Please confirm your password",
@@ -524,7 +527,7 @@ function PasswordSection({ loading, dispatch }) {
             })}
           />
           {errors.confirmPassword && (
-            <p className="text-red-500 text-sm mt-1">{errors.confirmPassword.message}</p>
+            <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.confirmPassword.message}</p>
           )}
         </div>
 
@@ -537,21 +540,21 @@ function PasswordSection({ loading, dispatch }) {
             onChange={() => setShowPasswords(!showPasswords)}
             className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
           />
-          <label htmlFor="showPassword" className="text-sm text-gray-600 cursor-pointer">
+          <label htmlFor="showPassword" className="text-xs sm:text-sm text-gray-600 cursor-pointer">
             Show passwords
           </label>
         </div>
 
         {/* Submit Button */}
-        <div className="pt-4">
+        <div className="pt-3 sm:pt-4">
           <button
             type="submit"
             disabled={loading}
-            className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 sm:px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
