@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getLikedVideos } from "../Store/Slices/likeSlice";
+import { getLikedVideos, resetLikedVideos } from "../Store/Slices/likeSlice";
 import VideoCard from "../components/VideoCard";
 import VideoCardSkeleton from "../skeleton/VideoCardSkeleton";
 import { BiLike } from "react-icons/bi";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 function LikedVideos() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { likedVideos, loading } = useSelector((state) => state.like);
+  const { likedVideos, loading, hasNextPage, page } = useSelector((state) => state.like);
   const userData = useSelector((state) => state.auth.userData);
 
   useEffect(() => {
@@ -17,8 +18,18 @@ function LikedVideos() {
       navigate("/login");
       return;
     }
-    dispatch(getLikedVideos());
+    dispatch(resetLikedVideos());
+    dispatch(getLikedVideos({ page: 1, limit: 20 }));
   }, [dispatch, userData, navigate]);
+
+  const fetchMoreVideos = useCallback(() => {
+    if (hasNextPage && !loading) {
+      dispatch(getLikedVideos({ page: page + 1, limit: 20 }));
+    }
+  }, [dispatch, hasNextPage, loading, page]);
+
+  // Debug: Log likedVideos to see the structure
+  console.log("Liked Videos Data:", likedVideos);
 
   if (!userData) {
     return null;
@@ -42,7 +53,7 @@ function LikedVideos() {
           </div>
 
           {/* Videos Grid */}
-          {loading ? (
+          {loading && likedVideos.length === 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {[...Array(8)].map((_, index) => (
                 <VideoCardSkeleton key={index} />
@@ -55,14 +66,30 @@ function LikedVideos() {
               <p className="text-sm">Videos you like will appear here</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-              {likedVideos.map((item) => {
-                const video = item.video || item;
-                return video?._id ? (
-                  <VideoCard key={video._id} video={video} />
-                ) : null;
-              })}
-            </div>
+            <InfiniteScroll
+              dataLength={likedVideos.length}
+              next={fetchMoreVideos}
+              hasMore={hasNextPage}
+              loader={
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mt-4">
+                  {[...Array(4)].map((_, index) => (
+                    <VideoCardSkeleton key={index} />
+                  ))}
+                </div>
+              }
+              scrollThreshold={0.9}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                {likedVideos.map((item, index) => {
+                  // Handle different possible response structures
+                  const video = item.video || item.likedVideo || item;
+                  if (!video?._id) return null;
+                  return (
+                    <VideoCard key={video._id || index} video={video} />
+                  );
+                })}
+              </div>
+            </InfiniteScroll>
           )}
         </div>
       </div>
