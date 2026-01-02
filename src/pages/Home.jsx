@@ -94,6 +94,7 @@ function Home() {
               {/* Category Tags */}
               <div className="flex-1 overflow-x-auto scrollbar-hide">
                 <div className="flex gap-3 pb-2">
+                  
                   <CategoryTag label="All" active />
                   <CategoryTag label="Music" />
                   <CategoryTag label="Gaming" />

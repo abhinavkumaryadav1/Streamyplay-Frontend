@@ -181,14 +181,17 @@ function VideoUploadModal({ onClose, onSuccess }) {
           {/* Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description
+              Description *
             </label>
             <textarea
               rows={4}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
               placeholder="Tell viewers about your video"
-              {...register("description")}
+              {...register("description", { required: "Description is required" })}
             />
+            {errors.description && (
+              <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>
+            )}
           </div>
 
           {/* Submit Button */}
