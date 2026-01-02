@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getVideoById, updateVideoOwnerSubscription } from "../Store/Slices/videoSlice";
 import { toggleVideoLike } from "../Store/Slices/likeSlice";
-import { toggleSubscription } from "../Store/Slices/subscriptionSlice";
+import { toggleSubscription, getSubscribedChannels } from "../Store/Slices/subscriptionSlice";
 import { openAuthModal } from "../Store/Slices/uiSlice";
 import { formatDistanceToNow } from "../helper/timeUtils";
 import CommentSection from "../components/CommentSection";
@@ -17,6 +17,7 @@ function WatchPage() {
   const dispatch = useDispatch();
   const { video, loading } = useSelector((state) => state.video);
   const { videos } = useSelector((state) => state.video);
+  const { subscribedChannels } = useSelector((state) => state.subscription);
   const userData = useSelector((state) => state.auth.userData);
 
   const [isLiked, setIsLiked] = useState(false);
@@ -30,13 +31,33 @@ function WatchPage() {
     }
   }, [dispatch, videoId]);
 
+  // Fetch user's subscribed channels to verify subscription status
+  useEffect(() => {
+    if (userData?._id) {
+      dispatch(getSubscribedChannels(userData._id));
+    }
+  }, [dispatch, userData?._id]);
+
   useEffect(() => {
     if (video) {
       setIsLiked(video.isLiked || false);
       setLikesCount(video.likesCount || 0);
-      setIsSubscribed(video.owner?.isSubscribed || false);
+      
+      // Check subscription status
+      let subscribed = video.owner?.isSubscribed || false;
+      
+      // Fallback: verify against subscribedChannels list if user is logged in
+      if (userData && subscribedChannels?.length > 0 && video.owner?._id) {
+        const isInSubscribedList = subscribedChannels.some((item) => {
+          const channel = item.channel || item;
+          return channel?._id === video.owner._id;
+        });
+        subscribed = isInSubscribedList;
+      }
+      
+      setIsSubscribed(subscribed);
     }
-  }, [video]);
+  }, [video, subscribedChannels, userData]);
 
   const handleLike = async () => {
     if (!userData) {
@@ -65,6 +86,8 @@ function WatchPage() {
         isSubscribed: newIsSubscribed,
         subscribersCount: newSubscribersCount,
       }));
+      // Refetch subscribed channels to keep the list in sync
+      dispatch(getSubscribedChannels(userData._id));
     }
   };
 

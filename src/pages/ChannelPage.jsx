@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userChannelProfile, updateProfileSubscription } from "../Store/Slices/userSlice";
 import { getAllVideos, makeVideosNull } from "../Store/Slices/videoSlice";
-import { toggleSubscription } from "../Store/Slices/subscriptionSlice";
+import { toggleSubscription, getSubscribedChannels } from "../Store/Slices/subscriptionSlice";
 import VideoCard from "../components/VideoCard";
 import VideoCardSkeleton from "../skeleton/VideoCardSkeleton";
 
@@ -13,19 +13,29 @@ function ChannelPage() {
   const navigate = useNavigate();
   const { profileData, loading: profileLoading } = useSelector((state) => state.user);
   const { videos, loading: videosLoading } = useSelector((state) => state.video);
+  const { subscribedChannels } = useSelector((state) => state.subscription);
   const userData = useSelector((state) => state.auth.userData);
 
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [subscribersCount, setSubscribersCount] = useState(0);
   const [activeTab, setActiveTab] = useState("videos");
 
+  // Refetch profile when username or userData changes (to get correct subscription status)
   useEffect(() => {
     if (username) {
       dispatch(userChannelProfile(username));
       dispatch(makeVideosNull());
     }
-  }, [dispatch, username]);
+  }, [dispatch, username, userData?._id]);
 
+  // Fetch user's subscribed channels to verify subscription status
+  useEffect(() => {
+    if (userData?._id) {
+      dispatch(getSubscribedChannels(userData._id));
+    }
+  }, [dispatch, userData?._id]);
+
+  // Fetch videos when profileData._id changes
   useEffect(() => {
     if (profileData?._id) {
       dispatch(
@@ -37,10 +47,28 @@ function ChannelPage() {
           sortType: "desc",
         })
       );
-      setIsSubscribed(profileData.isSubscribed || false);
-      setSubscribersCount(profileData.subscribersCount || 0);
     }
   }, [dispatch, profileData?._id]);
+
+  // Update subscription state whenever profileData or subscribedChannels changes
+  useEffect(() => {
+    if (profileData) {
+      // First check if backend returned isSubscribed
+      let subscribed = profileData.isSubscribed ?? false;
+      
+      // Fallback: verify against subscribedChannels list if user is logged in
+      if (userData && subscribedChannels?.length > 0 && profileData._id) {
+        const isInSubscribedList = subscribedChannels.some((item) => {
+          const channel = item.channel || item;
+          return channel?._id === profileData._id;
+        });
+        subscribed = isInSubscribedList;
+      }
+      
+      setIsSubscribed(subscribed);
+      setSubscribersCount(profileData.subscribersCount ?? 0);
+    }
+  }, [profileData, subscribedChannels, userData]);
 
   const handleSubscribe = async () => {
     if (!userData) {
@@ -58,6 +86,8 @@ function ChannelPage() {
         isSubscribed: newIsSubscribed,
         subscribersCount: newSubscribersCount,
       }));
+      // Refetch subscribed channels to keep the list in sync
+      dispatch(getSubscribedChannels(userData._id));
     }
   };
 
