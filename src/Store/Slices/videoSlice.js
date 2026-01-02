@@ -85,20 +85,29 @@ export const publishAvideo = createAsyncThunk(
 export const updateAVideo = createAsyncThunk(
     "updateAVideo",
     async ({ videoId, data }) => {
-        const formData = new FormData();
-        formData.append("title", data.title);
-        formData.append("description", data.description);
-        formData.append("thumbnail", data.thumbnail[0]);
-
         try {
+            const formData = new FormData();
+            formData.append("title", data.title);
+            formData.append("description", data.description);
+            
+            // Backend requires thumbnail
+            if (data.thumbnail && data.thumbnail[0]) {
+                formData.append("thumbnail", data.thumbnail[0]);
+            }
+            
             const response = await axiosInstance.patch(
                 `/video/${videoId}`,
                 formData
             );
-            toast.success(response?.data?.message);
+            
+            toast.success(response?.data?.message || "Video updated successfully");
             return response.data.data;
         } catch (error) {
-            toast.error(error?.response?.data?.error);
+            console.error("Update video error:", error?.response?.data);
+            const errorMessage = error?.response?.data?.error 
+                || error?.response?.data?.message 
+                || "Failed to update video";
+            toast.error(errorMessage);
             throw error;
         }
     }
@@ -183,9 +192,21 @@ const videoSlice = createSlice({
         builder.addCase(updateAVideo.pending, (state) => {
             state.uploading = true;
         });
-        builder.addCase(updateAVideo.fulfilled, (state) => {
+        builder.addCase(updateAVideo.fulfilled, (state, action) => {
             state.uploading = false;
             state.uploaded = true;
+            // Update the video in the videos list if it exists
+            const index = state.videos.docs.findIndex(v => v._id === action.payload._id);
+            if (index !== -1) {
+                state.videos.docs[index] = { ...state.videos.docs[index], ...action.payload };
+            }
+            // Update current video if it's the same
+            if (state.video?._id === action.payload._id) {
+                state.video = { ...state.video, ...action.payload };
+            }
+        });
+        builder.addCase(updateAVideo.rejected, (state) => {
+            state.uploading = false;
         });
         builder.addCase(deleteAVideo.pending, (state) => {
             state.loading = true;

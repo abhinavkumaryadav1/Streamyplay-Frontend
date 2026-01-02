@@ -28,11 +28,10 @@ function EditVideoModal({ video, onClose, onSuccess }) {
   });
 
   const onSubmit = async (data) => {
-    // If new thumbnail is selected, add it to form data
+    // Only add thumbnail if a new one is selected
     if (newThumbnailFile) {
       data.thumbnail = [newThumbnailFile];
     } else {
-      // Create a minimal data object for patch without thumbnail
       data.thumbnail = null;
     }
     
@@ -45,6 +44,11 @@ function EditVideoModal({ video, onClose, onSuccess }) {
       setNewThumbnailFile(file);
       setThumbnailPreview(URL.createObjectURL(file));
     }
+  };
+
+  const handleRemoveNewThumbnail = () => {
+    setNewThumbnailFile(null);
+    setThumbnailPreview(currentThumbnail);
   };
 
   const handleClose = () => {
@@ -115,27 +119,49 @@ function EditVideoModal({ video, onClose, onSuccess }) {
           {/* Thumbnail Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Change Thumbnail
+              Thumbnail {newThumbnailFile && <span className="text-green-600 text-xs">(New selected)</span>}
             </label>
             <div className="flex items-center gap-4">
               {thumbnailPreview && (
-                <img
-                  src={thumbnailPreview}
-                  alt="Thumbnail preview"
-                  className="w-32 aspect-video rounded-lg object-cover"
-                />
+                <div className="relative">
+                  <img
+                    src={thumbnailPreview}
+                    alt="Thumbnail preview"
+                    className={`w-32 aspect-video rounded-lg object-cover ${newThumbnailFile ? 'ring-2 ring-green-500' : 'ring-1 ring-gray-200'}`}
+                  />
+                  {newThumbnailFile && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveNewThumbnail}
+                      className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center transition"
+                      title="Remove new thumbnail"
+                    >
+                      <MdClose className="text-white text-sm" />
+                    </button>
+                  )}
+                </div>
               )}
-              <label className="flex flex-col items-center justify-center px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
-                <MdImage className="text-xl text-gray-400 mb-1" />
-                <p className="text-xs text-gray-600">Upload new</p>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleThumbnailChange}
-                />
-              </label>
+              <div className="flex flex-col gap-2">
+                <label className="flex flex-col items-center justify-center px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition">
+                  <MdImage className="text-xl text-gray-400 mb-1" />
+                  <p className="text-xs text-gray-600">
+                    {newThumbnailFile ? 'Change thumbnail' : 'Upload new'}
+                  </p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleThumbnailChange}
+                  />
+                </label>
+              </div>
             </div>
+            <p className="text-xs text-gray-500 mt-2">
+              {newThumbnailFile 
+                ? "New thumbnail will be uploaded. Click ✕ to keep the current one."
+                : "Leave unchanged to keep the current thumbnail."
+              }
+            </p>
           </div>
 
           {/* Title */}
