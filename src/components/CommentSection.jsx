@@ -30,7 +30,7 @@ function CommentSection({ videoId }) {
       return;
     }
     
-    await dispatch(addComment({ videoId, content: newComment }));
+    await dispatch(addComment({ videoId, content: newComment, userData }));
     setNewComment("");
     setIsFocused(false);
   };

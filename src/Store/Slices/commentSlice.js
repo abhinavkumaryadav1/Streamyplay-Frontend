@@ -26,13 +26,24 @@ export const getVideoComments = createAsyncThunk(
 
 export const addComment = createAsyncThunk(
     "addComment",
-    async ({ videoId, content }) => {
+    async ({ videoId, content, userData }) => {
         try {
             const response = await axiosInstance.post(`/comment/${videoId}`, {
                 content,
             });
             toast.success("Comment added!");
-            return response.data.data;
+            // Return comment with owner info for proper display
+            return {
+                ...response.data.data,
+                owner: {
+                    _id: userData._id,
+                    username: userData.username,
+                    fullName: userData.fullName,
+                    avatar: userData.avatar,
+                },
+                likesCount: 0,
+                isLiked: false,
+            };
         } catch (error) {
             toast.error(error?.response?.data?.error);
             throw error;
@@ -105,7 +116,12 @@ const commentSlice = createSlice({
                 (comment) => comment._id === action.payload._id
             );
             if (index !== -1) {
-                state.comments[index] = action.payload;
+                // Preserve the owner info from existing comment since backend might not return populated owner
+                state.comments[index] = {
+                    ...state.comments[index],
+                    content: action.payload.content,
+                    updatedAt: action.payload.updatedAt,
+                };
             }
         });
     },

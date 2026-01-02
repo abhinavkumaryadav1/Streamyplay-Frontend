@@ -1,12 +1,11 @@
 import { IoSearch, IoClose } from "react-icons/io5";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { FaBars, FaUserCircle } from "react-icons/fa";
-import { MdKeyboardVoice, MdLogout } from "react-icons/md";
+import { MdKeyboardVoice, MdLogout, MdSettings } from "react-icons/md";
 import { useSelector, useDispatch } from "react-redux";
 import { userLogout } from "../Store/Slices/authSlice";
 import { useState, useEffect, useRef, useCallback } from "react";
 import axiosInstance from "../helper/axiosInstance";
-import { Link } from "react-router-dom";
 import debounce from "../helper/debounce";
 
 export default function Navbar() {
@@ -248,6 +247,13 @@ export default function Navbar() {
             <MdLogout className="text-base sm:text-lg" /> Logout
           </button>
         )}
+        {/* Settings icon - visible on mobile only */}
+        <Link
+          to="/settings"
+          className="sm:hidden p-2 hover:bg-gray-100 rounded-full transition"
+        >
+          <MdSettings className="text-xl text-gray-600" />
+        </Link>
         {userData && userData.avatar ? (
           <Link to={`/channel/${userData.username}`}>
             <img
