@@ -28,9 +28,6 @@ function LikedVideos() {
     }
   }, [dispatch, hasNextPage, loading, page]);
 
-  // Debug: Log likedVideos to see the structure
-  console.log("Liked Videos Data:", likedVideos);
-
   if (!userData) {
     return null;
   }
