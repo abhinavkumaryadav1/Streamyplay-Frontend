@@ -10,8 +10,6 @@ import CommentSection from "../components/CommentSection";
 import VideoCardHorizontal from "../components/VideoCardHorizontal";
 import VideoPlayer from "../components/VideoPlayer";
 import { BiLike, BiDislike, BiShare } from "react-icons/bi";
-import { RiPlayListAddLine } from "react-icons/ri";
-import { HiDotsHorizontal } from "react-icons/hi";
 
 function WatchPage() {
   const { videoId } = useParams();
@@ -267,20 +265,22 @@ function WatchPage() {
                   </div>
 
                   {/* Share */}
-                  <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200 transition">
+                  <button 
+                    onClick={() => {
+                      if (navigator.share) {
+                        navigator.share({
+                          title: video.title,
+                          url: window.location.href,
+                        }).catch(() => {});
+                      } else {
+                        navigator.clipboard.writeText(window.location.href);
+                        alert("Link copied to clipboard!");
+                      }
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+                  >
                     <BiShare className="text-xl" />
                     <span className="text-sm font-medium">Share</span>
-                  </button>
-
-                  {/* Save */}
-                  <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200 transition">
-                    <RiPlayListAddLine className="text-xl" />
-                    <span className="text-sm font-medium hidden sm:inline">Save</span>
-                  </button>
-
-                  {/* More */}
-                  <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition">
-                    <HiDotsHorizontal className="text-xl" />
                   </button>
                 </div>
               </div>

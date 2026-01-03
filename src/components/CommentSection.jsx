@@ -53,12 +53,6 @@ function CommentSection({ videoId }) {
       {/* Comments Header */}
       <div className="flex items-center gap-6 mb-6">
         <h3 className="text-lg font-bold">{totalComments} Comments</h3>
-        <button className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
-          </svg>
-          Sort by
-        </button>
       </div>
 
       {/* Add Comment */}

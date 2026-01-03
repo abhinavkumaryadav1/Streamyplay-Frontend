@@ -4,7 +4,7 @@ import { deleteComment, updateComment } from "../Store/Slices/commentSlice";
 import { toggleCommentLike } from "../Store/Slices/likeSlice";
 import { formatDistanceToNow } from "../helper/timeUtils";
 import { Link } from "react-router-dom";
-import { BiLike, BiDislike } from "react-icons/bi";
+import { BiLike } from "react-icons/bi";
 import { HiDotsVertical } from "react-icons/hi";
 import { MdEdit, MdDelete } from "react-icons/md";
 
@@ -174,12 +174,6 @@ function Comment({ comment }) {
             >
               <BiLike className="text-lg" />
               {likesCount > 0 && <span>{likesCount}</span>}
-            </button>
-            <button className="text-gray-600 hover:bg-gray-100 p-1 rounded-full transition">
-              <BiDislike className="text-lg" />
-            </button>
-            <button className="text-sm font-medium text-gray-700 hover:bg-gray-100 px-3 py-1 rounded-full">
-              Reply
             </button>
           </div>
         )}
