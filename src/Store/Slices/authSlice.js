@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../helper/axiosInstance";
 import toast from "react-hot-toast";
+import getErrorMessage from "../../helper/getErrorMessage";
 
+ 
 
 const getInitialUser = () => {
     const userData = localStorage.getItem("userData");
@@ -16,7 +18,7 @@ const getInitialUser = () => {
 const initialState = getInitialUser();
 
 
-export const createAccount = createAsyncThunk("register", async (data)=>{
+export const createAccount = createAsyncThunk("register", async (data, { rejectWithValue })=>{
 
     const formData = new FormData();
     formData.append("avatar", data.avatar[0]);
@@ -24,7 +26,7 @@ export const createAccount = createAsyncThunk("register", async (data)=>{
     formData.append("email", data.email);
     formData.append("password", data.password);
     formData.append("fullName", data.fullName);
-    if (data.coverImage) {
+    if (data.coverImage && data.coverImage[0]) {
         formData.append("coverImage", data.coverImage[0]);
     }
     
@@ -36,8 +38,10 @@ export const createAccount = createAsyncThunk("register", async (data)=>{
         return response.data;
         
     } catch (error) {
-        toast.error(error?.response?.data?.error);
-        throw error;
+        console.log("Registration error:", error?.response?.data);
+        const errorMessage = getErrorMessage(error) || "Registration failed. Please try again.";
+        toast.error(errorMessage);
+        return rejectWithValue(errorMessage);
     }
 })
 
@@ -49,25 +53,23 @@ export const userLogin = createAsyncThunk("login", async (data, { rejectWithValu
 
         
     } catch (error) {
-        return rejectWithValue(
-        error.response?.data?.error || "Login failed"
-      );
-        
-
+        const errorMessage = getErrorMessage(error);
+        return rejectWithValue(errorMessage);
     }
 })
 
-export const userLogout = createAsyncThunk("logout", async () => {
+export const userLogout = createAsyncThunk("logout", async (_, { rejectWithValue }) => {
     try {
         const response = await axiosInstance.post("/user/logout", {}, { withCredentials: true });
         return response.data;
     } catch (error) {
-        toast.error(error?.response?.data?.error);
-        throw error;
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+        return rejectWithValue(errorMessage);
     }
 });
 
-export const refreshAccessToken = createAsyncThunk("refreshAccessToken", async (data)=>{
+export const refreshAccessToken = createAsyncThunk("refreshAccessToken", async (data, { rejectWithValue })=>{
     try {
         const response = await axiosInstance.post(
                 "/user/refresh-token",
@@ -75,12 +77,13 @@ export const refreshAccessToken = createAsyncThunk("refreshAccessToken", async (
             );
             return response.data;
     } catch (error) {
-        toast.error(error?.response?.data?.error);
-            throw error;
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+        return rejectWithValue(errorMessage);
     }
 })
 
-export const changePassword = createAsyncThunk("changePassword", async(data)=>{
+export const changePassword = createAsyncThunk("changePassword", async(data, { rejectWithValue })=>{
     try {
          const response = await axiosInstance.post(
                 "/user/change-password",
@@ -89,8 +92,9 @@ export const changePassword = createAsyncThunk("changePassword", async(data)=>{
             toast.success(response.data?.message);
             return response.data;
     } catch (error) {
-        toast.error(error?.response?.data?.error);
-            throw error;
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+        return rejectWithValue(errorMessage);
     }
 })
 
@@ -104,11 +108,12 @@ export const getCurrentUser = createAsyncThunk("getCurrentUser", async (_, { rej
             localStorage.removeItem("userData");
             localStorage.removeItem("status");
         }
-        return rejectWithValue(error.response?.data?.message || "Failed to get user");
+        const errorMessage = getErrorMessage(error);
+        return rejectWithValue(errorMessage);
     }
 })
 
-export const updateAvatar = createAsyncThunk("updateAvatar", async (avatar)=>{
+export const updateAvatar = createAsyncThunk("updateAvatar", async (avatar, { rejectWithValue })=>{
     try {
         const response = await axiosInstance.patch(
             "/user/avatar",
@@ -117,12 +122,13 @@ export const updateAvatar = createAsyncThunk("updateAvatar", async (avatar)=>{
         toast.success("Updated details successfully!!!");
         return response.data.data;
     } catch (error) {
-        toast.error(error?.response?.data?.error);
-        throw error;
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+        return rejectWithValue(errorMessage);
     }
 })
 
-export const updateCoverImg = createAsyncThunk("updateCoverImg", async (coverImage)=>{
+export const updateCoverImg = createAsyncThunk("updateCoverImg", async (coverImage, { rejectWithValue })=>{
     try {
         const response = await axiosInstance.patch(
                 "/user/cover-image",
@@ -131,12 +137,13 @@ export const updateCoverImg = createAsyncThunk("updateCoverImg", async (coverIma
             toast.success(response.data?.message);
             return response.data.data;
     } catch (error) {
-        toast.error(error?.response?.data?.error);
-            throw error;
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+        return rejectWithValue(errorMessage);
     }
 })
 
-export const updateUserDetails = createAsyncThunk("updateUserDetails", async(data)=>{
+export const updateUserDetails = createAsyncThunk("updateUserDetails", async(data, { rejectWithValue })=>{
     try {
         const response = await axiosInstance.patch(
                 "/user/update-account",
@@ -145,8 +152,9 @@ export const updateUserDetails = createAsyncThunk("updateUserDetails", async(dat
             toast.success("Updated details successfully!!!");
             return response.data;
     } catch (error) {
-        toast.error(error?.response?.data?.error);
-            throw error;
+        const errorMessage = getErrorMessage(error);
+        toast.error(errorMessage);
+        return rejectWithValue(errorMessage);
     }
 })
 
@@ -179,6 +187,9 @@ const authSlice = createSlice({
             state.loading = true;
         });
         builder.addCase(createAccount.fulfilled, (state) => {
+            state.loading = false;
+        });
+        builder.addCase(createAccount.rejected, (state) => {
             state.loading = false;
         });
         builder.addCase(userLogin.pending, (state) => {

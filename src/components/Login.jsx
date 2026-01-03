@@ -4,33 +4,49 @@ import { useNavigate, Link } from "react-router-dom";
 import { userLogin } from "../Store/Slices/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import LoginSkeleton from "../skeleton/loginSkeleton.jsx";
+import { MdError } from "react-icons/md";
 
-// Simple Logo component
+// SVG Logo component matching favicon
 function Logo() {
   return (
-    <span className="text-2xl font-bold text-purple-600 drop-shadow-lg">
-      StreamyPlay
-    </span>
+    <div className="flex items-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" className="w-10 h-10">
+        <defs>
+          <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{stopColor:'#dc2626',stopOpacity:1}} />
+            <stop offset="100%" style={{stopColor:'#b91c1c',stopOpacity:1}} />
+          </linearGradient>
+        </defs>
+        <circle cx="32" cy="32" r="30" fill="url(#logoGradient)" />
+        <polygon points="26,18 26,46 50,32" fill="white" />
+      </svg>
+      <span className="text-xl font-bold text-gray-900 tracking-wide">
+        STREAMYPLAY
+      </span>
+    </div>
   );
 }
 
-// Simple Input component
-const Input = React.forwardRef(({ label, ...props }, ref) => (
+// Input component matching project style
+const Input = React.forwardRef(({ label, error, ...props }, ref) => (
   <div className="mb-4">
-    <label className="block mb-1 font-medium text-gray-700">{label}</label>
+    <label className="block mb-1.5 text-sm font-medium text-gray-700">{label}</label>
     <input
       ref={ref}
       {...props}
-      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-900 bg-white/80 backdrop-blur-md transition-all duration-200 shadow-sm"
+      className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 bg-white transition-all duration-200 ${
+        error ? "border-red-400" : "border-gray-300"
+      }`}
     />
   </div>
 ));
 
-// Simple Button component
-function Button({ children, className = "", ...props }) {
+// Button component matching project style
+function Button({ children, className = "", disabled, ...props }) {
   return (
     <button
-      className={`bg-linear-to-r from-purple-500 to-indigo-500 text-white rounded-lg ${className} transition hover:scale-105 hover:shadow-xl font-semibold shadow-md py-3`}
+      className={`bg-red-600 hover:bg-red-700 text-white rounded-lg ${className} transition-all duration-200 font-semibold py-3 disabled:opacity-60 disabled:cursor-not-allowed`}
+      disabled={disabled}
       {...props}
     >
       {children}
@@ -56,16 +72,10 @@ function Login() {
       ? { email: data.username, password: data.password }
       : data;
     try {
-      const response = await dispatch(userLogin(loginData)).unwrap();
-      // Optionally, fetch user info here if needed
+      await dispatch(userLogin(loginData)).unwrap();
       navigate("/");
-      
-        
-      
     } catch (err) {
-      
       setErrorMsg(err || "Invalid credentials or user not found.");
-        navigate("/login");
     }
   };
 
@@ -74,76 +84,96 @@ function Login() {
   }
 
   return (
-    <div
-      className="w-full min-h-screen flex justify-center items-center relative overflow-hidden px-2 sm:px-0"
-      style={{
-        background:
-          "linear-gradient(120deg, #a18cd1 0%, #fbc2eb 100%)",
-      }}
-    >
-      {/* Blurred floating gradient shapes */}
-      <div
-        className="absolute top-0 left-0 w-60 h-60 sm:w-96 sm:h-96 bg-purple-400 opacity-30 rounded-full blur-3xl animate-pulse"
-        style={{ zIndex: 0 }}
-      ></div>
-      <div
-        className="absolute bottom-0 right-0 w-48 h-48 sm:w-80 sm:h-80 bg-indigo-400 opacity-30 rounded-full blur-2xl animate-pulse"
-        style={{ zIndex: 0 }}
-      ></div>
-      <div
-        className="w-full max-w-xs sm:max-w-md bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl border border-gray-200 p-4 sm:p-8 flex flex-col items-center z-10"
-        style={{
-          boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
-        }}
-      >
-        <div className="flex items-center gap-2 mb-6">
-          <Logo />
-        </div>
-        <form onSubmit={handleSubmit(submit)} className="space-y-4 sm:space-y-5 w-full">
-          <Input
-            label="Username / email : "
-            type="text"
-            placeholder="example@gmail.com"
-            {...register("username", {
-              required: "username is required",
-            })}
-          />
-          {errors.username && (
-            <span className="text-red-500 text-sm">
-              {errors.username.message}
-            </span>
-          )}
-          <Input
-            label="Password: "
-            type="password"
-            placeholder="Your password"
-            {...register("password", {
-              required: "password is required",
-            })}
-          />
-          {errors.password && (
-            <span className="text-red-500 text-sm">
-              {errors.password.message}
-            </span>
-          )}
-          {errorMsg && <div className="text-red-400 text-sm">{errorMsg}</div>}
-          <Button
-            type="submit"
-            className="w-full text-base sm:text-lg"
-            disabled={loading}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </Button>
-          <p className="text-center text-xs sm:text-sm text-gray-700">
-            Don&apos;t have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-purple-600 cursor-pointer hover:underline"
-            >
-              SignUp
-            </Link>
+    <div className="min-h-screen bg-gray-50 flex justify-center items-center px-4 py-8">
+      <div className="w-full max-w-md">
+        {/* Card */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
+          {/* Logo */}
+          <div className="flex justify-center mb-8">
+            <Logo />
+          </div>
+
+          {/* Title */}
+          <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">
+            Welcome back
+          </h1>
+          <p className="text-gray-600 text-center mb-8">
+            Sign in to continue to StreamyPlay
           </p>
-        </form>
+
+          {/* Error Alert */}
+          {errorMsg && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+              <MdError className="text-red-500 text-xl flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-red-800 font-medium text-sm">Login failed</p>
+                <p className="text-red-600 text-sm mt-1">{errorMsg}</p>
+              </div>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(submit)} className="space-y-4">
+            <div>
+              <Input
+                label="Username or Email"
+                type="text"
+                placeholder="Enter your username or email"
+                error={errors.username}
+                {...register("username", {
+                  required: "Username is required",
+                })}
+              />
+              {errors.username && (
+                <span className="text-red-500 text-sm -mt-2 block">
+                  {errors.username.message}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <Input
+                label="Password"
+                type="password"
+                placeholder="Enter your password"
+                error={errors.password}
+                {...register("password", {
+                  required: "Password is required",
+                })}
+              />
+              {errors.password && (
+                <span className="text-red-500 text-sm -mt-2 block">
+                  {errors.password.message}
+                </span>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full text-base mt-6"
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Sign In"}
+            </Button>
+          </form>
+
+          {/* Divider */}
+          <div className="relative my-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-4 bg-white text-gray-500">New to StreamyPlay?</span>
+            </div>
+          </div>
+
+          {/* Sign up link */}
+          <Link
+            to="/signup"
+            className="w-full block text-center py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-all duration-200"
+          >
+            Create an account
+          </Link>
+        </div>
       </div>
     </div>
   );

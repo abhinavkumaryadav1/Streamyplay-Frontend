@@ -1,30 +1,52 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { createAccount, userLogin } from "../Store/Slices/authSlice.js";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import LoginSkeleton from "../skeleton/loginSkeleton.jsx";
 import GetImagePreview from "./GetImagePreview.jsx";
-import { FaCheckCircle, FaVideo, FaExclamationTriangle } from "react-icons/fa";
-import { MdWarning } from "react-icons/md";
+import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
+import { MdWarning, MdError, MdVideoLibrary } from "react-icons/md";
 
+// SVG Logo component matching favicon
+function Logo() {
+  return (
+    <div className="flex items-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" className="w-10 h-10">
+        <defs>
+          <linearGradient id="logoGradientSignup" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style={{stopColor:'#dc2626',stopOpacity:1}} />
+            <stop offset="100%" style={{stopColor:'#b91c1c',stopOpacity:1}} />
+          </linearGradient>
+        </defs>
+        <circle cx="32" cy="32" r="30" fill="url(#logoGradientSignup)" />
+        <polygon points="26,18 26,46 50,32" fill="white" />
+      </svg>
+      <span className="text-xl font-bold text-gray-900 tracking-wide">
+        STREAMYPLAY
+      </span>
+    </div>
+  );
+}
 
-const Input = React.forwardRef(({ label, ...props }, ref) => (
-  <div className="mb-4">
-    <label className="block mb-1 font-medium text-gray-700">{label}</label>
+const Input = React.forwardRef(({ label, error, ...props }, ref) => (
+  <div className="mb-3">
+    <label className="block mb-1.5 text-sm font-medium text-gray-700">{label}</label>
     <input
       ref={ref}
       {...props}
-      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-900 bg-white/80 backdrop-blur-md transition-all duration-200 shadow-sm"
+      className={`w-full px-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 bg-white transition-all duration-200 text-sm ${
+        error ? "border-red-400" : "border-gray-300"
+      }`}
     />
   </div>
 ));
 
-function Button({ children, className = "", ...props }) {
+function Button({ children, className = "", disabled, ...props }) {
   return (
     <button
-      className={`bg-linear-to-r from-purple-500 to-indigo-500 text-white rounded-lg ${className} transition hover:scale-105 hover:shadow-xl font-semibold shadow-md py-3`}
+      className={`bg-red-600 hover:bg-red-700 text-white rounded-lg ${className} transition-all duration-200 font-semibold py-2.5 disabled:opacity-60 disabled:cursor-not-allowed`}
+      disabled={disabled}
       {...props}
     >
       {children}
@@ -45,22 +67,28 @@ function SignUp() {
     
     const [showTermsModal, setShowTermsModal] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
     const submit = async (data) => {
-        const response = await dispatch(createAccount(data));
-        if (response?.payload?.success) {
-            const username = data?.username;
-            const password = data?.password;
-            const loginResult = await dispatch(
-                userLogin({ username, password })
-            );
+        setErrorMsg("");
+        try {
+            const response = await dispatch(createAccount(data)).unwrap();
+            if (response?.success) {
+                const username = data?.username;
+                const password = data?.password;
+                const loginResult = await dispatch(
+                    userLogin({ username, password })
+                );
 
-            if (loginResult?.type === "login/fulfilled") {
-                // Show terms modal instead of navigating directly
-                setShowTermsModal(true);
-            } else {
-                navigate("/login");
+                if (loginResult?.type === "login/fulfilled") {
+                    setShowTermsModal(true);
+                } else {
+                    navigate("/login");
+                }
             }
+        } catch (err) {
+            // err is the rejected value from rejectWithValue (a string)
+            setErrorMsg(typeof err === 'string' ? err : "Registration failed. Please try again.");
         }
     };
 
@@ -93,14 +121,14 @@ function SignUp() {
               {/* Content */}
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-4">
-                  <FaVideo className="text-purple-400" />
+                  <MdVideoLibrary className="text-red-400" />
                   <h3 className="text-lg font-semibold text-white">Terms and Conditions</h3>
                 </div>
 
                 <div className="bg-gray-800/50 rounded-xl p-4 space-y-3 border border-gray-700">
                   <div className="flex items-start gap-3">
-                    <div className="p-1.5 bg-purple-500/20 rounded-lg mt-0.5">
-                      <FaExclamationTriangle className="text-purple-400 text-sm" />
+                    <div className="p-1.5 bg-red-500/20 rounded-lg mt-0.5">
+                      <FaExclamationTriangle className="text-red-400 text-sm" />
                     </div>
                     <p className="text-gray-300 text-sm">This is my personal project.</p>
                   </div>
@@ -140,7 +168,7 @@ function SignUp() {
                       onChange={(e) => setTermsAccepted(e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-6 h-6 border-2 border-gray-500 rounded-md peer-checked:border-purple-500 peer-checked:bg-purple-500 transition-all flex items-center justify-center">
+                    <div className="w-6 h-6 border-2 border-gray-500 rounded-md peer-checked:border-red-500 peer-checked:bg-red-500 transition-all flex items-center justify-center">
                       {termsAccepted && (
                         <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -157,7 +185,7 @@ function SignUp() {
                 <div className={`mt-6 transition-all duration-300 ${termsAccepted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
                   <button
                     onClick={handleContinue}
-                    className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-purple-500/25 flex items-center justify-center gap-2"
+                    className="w-full py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all shadow-lg hover:shadow-red-500/25 flex items-center justify-center gap-2"
                   >
                     <span>Continue to StreamyPlay</span>
                     <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -170,113 +198,176 @@ function SignUp() {
           </div>
         )}
 
-        <div className="w-full min-h-screen text-white p-2 sm:p-3 flex justify-center items-start sm:mt-8 bg-gradient-to-br from-purple-400/30 to-indigo-300/30">
-            <div className="flex flex-col space-y-2 justify-center items-center border border-slate-600 p-2 sm:p-3 w-full max-w-xs sm:max-w-md rounded-xl sm:rounded-2xl bg-white/10 backdrop-blur-md shadow-lg">
+        <div className="min-h-screen bg-gray-50 flex justify-center items-center px-4 py-8">
+            <div className="w-full max-w-md">
+                {/* Card */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
+                    {/* Logo */}
+                    <div className="flex justify-center mb-6">
+                        <Logo />
+                    </div>
+
+                    {/* Title */}
+                    <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">
+                        Create an account
+                    </h1>
+                    <p className="text-gray-600 text-center mb-6 text-sm">
+                        Join StreamyPlay to share and watch videos
+                    </p>
+
+                    {/* Error Alert */}
+                    {errorMsg && (
+                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
+                            <MdError className="text-red-500 text-xl flex-shrink-0 mt-0.5" />
+                            <div>
+                                <p className="text-red-800 font-medium text-sm">Registration failed</p>
+                                <p className="text-red-600 text-sm mt-1">{errorMsg}</p>
+                            </div>
+                        </div>
+                    )}
+
                 <form
                     onSubmit={handleSubmit(submit)}
-                    className="space-y-3 sm:space-y-4 p-1 sm:p-2 text-xs sm:text-sm w-full"
+                    className="space-y-4"
                 >
-                    <div className="w-full relative h-24 sm:h-28 bg-[#222222] rounded-lg overflow-hidden">
-  <GetImagePreview
-    name="coverImage"
-    control={control}
-    className="w-full h-full object-cover"
-    cameraIcon
-  />
-
-  <div className="text-xs sm:text-sm absolute right-2 bottom-2 text-white/80">
-    Cover Image
-  </div>
-
-  <div className="absolute left-2 bottom-2 rounded-full border-2 border-white bg-black">
-    <GetImagePreview
-      name="avatar"
-      control={control}
-      className="object-cover rounded-full h-12 w-12 sm:h-20 sm:w-20"
-      cameraIcon
-      cameraSize={20}
-    />
-  </div>
-</div>
+                    {/* Cover & Avatar Section */}
+                    <div className="relative">
+                        {/* Cover Image */}
+                        <div className="w-full h-24 sm:h-28 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
+                            <GetImagePreview
+                                name="coverImage"
+                                control={control}
+                                className="w-full h-full object-cover"
+                                cameraIcon
+                                required={false}
+                            />
+                        </div>
+                        
+                        {/* Avatar - positioned over cover */}
+                        <div className="absolute -bottom-6 left-4">
+                            <div className="rounded-full border-4 border-white bg-white shadow-lg overflow-hidden">
+                                <GetImagePreview
+                                    name="avatar"
+                                    control={control}
+                                    className="object-cover rounded-full h-16 w-16 sm:h-20 sm:w-20"
+                                    cameraIcon
+                                    cameraSize={16}
+                                />
+                            </div>
+                        </div>
+                        
+                        {/* Optional label */}
+                        <div className="absolute top-2 right-2 text-xs text-gray-500 bg-white/90 px-2 py-0.5 rounded shadow-sm">
+                            Cover (Optional)
+                        </div>
+                    </div>
+                    
+                    {/* Spacer for avatar overflow */}
+                    <div className="pt-4">
+                        <p className="text-xs text-gray-500">Avatar is required, cover image is optional</p>
+                    </div>
 
                     {errors.avatar && (
-                        <div className="text-red-500">
+                        <div className="text-red-500 text-sm">
                             {errors.avatar.message}
                         </div>
                     )}
-                    <Input
-                        label="Username: "
-                        type="text"
-                        placeholder="Enter username"
-                        {...register("username", {
-                            required: "username is required",
-                        })}
-                        className="h-7 sm:h-8"
-                    />
-                    {errors.username && (
-                        <span className="text-red-500">
-                            {errors.username.message}
-                        </span>
-                    )}
-                    <Input
-                        label="Email: "
-                        type="email"
-                        placeholder="Enter email"
-                        {...register("email", {
-                            required: "email is required",
-                        })}
-                        className="h-7 sm:h-8"
-                    />
-                    {errors.email && (
-                        <span className="text-red-500">
-                            {errors.email.message}
-                        </span>
-                    )}
-                    <Input
-                        label="Fullname: "
-                        type="text"
-                        placeholder="Enter fullname"
-                        {...register("fullName", {
-                            required: "fullName is required",
-                        })}
-                        className="h-7 sm:h-8"
-                    />
-                    {errors.fullName && (
-                        <span className="text-red-500">
-                            {errors.fullName.message}
-                        </span>
-                    )}
-                    <Input
-                        label="Password: "
-                        type="password"
-                        placeholder="Enter password"
-                        {...register("password", {
-                            required: "password is required",
-                        })}
-                        className="h-7 sm:h-8"
-                    />
-                    {errors.password && (
-                        <span className="text-red-500">
-                            {errors.password.message}
-                        </span>
-                    )}
+
+                    <div>
+                        <Input
+                            label="Username"
+                            type="text"
+                            placeholder="Choose a username"
+                            error={errors.username}
+                            {...register("username", {
+                                required: "Username is required",
+                            })}
+                        />
+                        {errors.username && (
+                            <span className="text-red-500 text-xs -mt-2 block">
+                                {errors.username.message}
+                            </span>
+                        )}
+                    </div>
+
+                    <div>
+                        <Input
+                            label="Email"
+                            type="email"
+                            placeholder="Enter your email"
+                            error={errors.email}
+                            {...register("email", {
+                                required: "Email is required",
+                            })}
+                        />
+                        {errors.email && (
+                            <span className="text-red-500 text-xs -mt-2 block">
+                                {errors.email.message}
+                            </span>
+                        )}
+                    </div>
+
+                    <div>
+                        <Input
+                            label="Full Name"
+                            type="text"
+                            placeholder="Enter your full name"
+                            error={errors.fullName}
+                            {...register("fullName", {
+                                required: "Full name is required",
+                            })}
+                        />
+                        {errors.fullName && (
+                            <span className="text-red-500 text-xs -mt-2 block">
+                                {errors.fullName.message}
+                            </span>
+                        )}
+                    </div>
+
+                    <div>
+                        <Input
+                            label="Password"
+                            type="password"
+                            placeholder="Create a password"
+                            error={errors.password}
+                            {...register("password", {
+                                required: "Password is required",
+                            })}
+                        />
+                        {errors.password && (
+                            <span className="text-red-500 text-xs -mt-2 block">
+                                {errors.password.message}
+                            </span>
+                        )}
+                    </div>
+
                     <Button
                         type="submit"
-                        bgcolor="bg-purple-500"
-                        className="w-full py-2 sm:py-3 hover:bg-purple-700 text-base sm:text-lg"
+                        className="w-full text-base mt-4"
+                        disabled={loading}
                     >
-                        Signup
+                        {loading ? "Creating account..." : "Create Account"}
                     </Button>
-                    <p className="text-center text-xs sm:text-sm text-neutral-950">
-                        Already have an account?{" "}
-                        <Link
-                            to={"/login"}
-                            className="text-purple-600 cursor-pointer hover:opacity-70"
-                        >
-                            Login
-                        </Link>
-                    </p>
                 </form>
+
+                {/* Divider */}
+                <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="px-4 bg-white text-gray-500">Already have an account?</span>
+                    </div>
+                </div>
+
+                {/* Login link */}
+                <Link
+                    to="/login"
+                    className="w-full block text-center py-2.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-all duration-200 text-sm"
+                >
+                    Sign in instead
+                </Link>
+                </div>
             </div>
         </div>
         </>

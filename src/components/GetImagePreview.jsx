@@ -11,79 +11,95 @@ function GetImagePreview({
     className,
     cameraIcon = false,
     cameraSize = 20,
-    image
+    image,
+    required = true
 }) {
     const [preview, setPreview] = useState(null);
 
     const handlePreview = (e) => {
         const files = e.target.files;
-        setPreview(URL.createObjectURL(files[0]));
-        return files;
+        if (files && files[0]) {
+            setPreview(URL.createObjectURL(files[0]));
+            return files;
+        }
+        return null;
     };
-    // Radial gradient SVG as fallback
+
     const isAvatar = name === "avatar";
     const isCover = name === "coverImage";
     const showDefault = !(preview || image);
-    const defaultGradient = isAvatar
-        ? (
-            <svg width="100%" height="100%" viewBox="0 0 100 100" className={className} style={{position:'absolute',top:0,left:0}}>
-                <circle cx="50" cy="50" r="50" fill="#fff" />
-            </svg>
-        )
-        : isCover
-        ? (
-            <svg width="100%" height="100%" viewBox="0 0 100 100" className={className} style={{position:'absolute',top:0,left:0}}>
-                <rect width="100" height="100" fill="#000" />
-            </svg>
-        ) : null;
+
     return (
-        <div className="w-full">
-            <label
-                htmlFor={name}
-                className="cursor-pointer relative flex flex-col justify-center items-start sm:items-center"
-            >
-                {label && (
-                    <span className="inline-block mb-2 pl-1 text-base sm:text-lg">{label}</span>
-                )}
-                <div className="relative flex justify-center items-center w-full">
-                    <div className="absolute w-full h-full flex items-center justify-center">
-                        {showDefault && defaultGradient}
+        <Controller
+            name={name}
+            control={control}
+            defaultValue={defaultValue || ""}
+            rules={required ? { required: `${name} is required` } : {}}
+            render={({ field: { onChange } }) => (
+                <label
+                    htmlFor={name}
+                    className={`cursor-pointer relative block ${
+                        isCover ? "w-full h-full" : ""
+                    }`}
+                >
+                    {label && (
+                        <span className="inline-block mb-2 pl-1 text-base sm:text-lg text-gray-700">{label}</span>
+                    )}
+                    
+                    {/* Image container */}
+                    <div className={`relative ${
+                        isCover ? "w-full h-full" : "inline-block"
+                    }`}>
+                        {/* Default placeholder for avatar */}
+                        {isAvatar && showDefault && (
+                            <div className={`${className} bg-gray-300 flex items-center justify-center`}>
+                                <FaCamera className="text-gray-500" size={cameraSize} />
+                            </div>
+                        )}
+                        
+                        {/* Default placeholder for cover */}
+                        {isCover && showDefault && (
+                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <div className="flex flex-col items-center text-gray-400">
+                                    <FaCamera size={24} />
+                                    <span className="text-xs mt-1">Add Cover</span>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* Actual image preview */}
+                        {!showDefault && (
+                            <img
+                                src={preview || image}
+                                className={className || "w-32 h-32 object-cover rounded-lg"}
+                                alt="preview"
+                            />
+                        )}
+                        
+                        {/* Camera icon overlay */}
+                        {cameraIcon && !showDefault && (
+                            <div className="absolute bottom-1 right-1 bg-black/60 rounded-full p-1.5 hover:bg-red-600 transition-colors">
+                                <FaCamera
+                                    size={cameraSize - 6}
+                                    className="text-white"
+                                />
+                            </div>
+                        )}
                     </div>
-                    <img
-                        src={preview || image}
-                        className={
-                            className ||
-                            "w-32 h-32 sm:w-40 sm:h-40 object-cover rounded-lg border border-gray-300 bg-gray-100 transition-all duration-200 shadow-sm"
-                        }
-                        alt="preview"
-                        style={showDefault ? {opacity:0} : {}}
+                    
+                    <input
+                        id={name}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                            const files = handlePreview(e);
+                            if (files) onChange(files);
+                        }}
                     />
-                    {cameraIcon && (
-                        <FaCamera
-                            size={cameraSize}
-                            className="hover:text-purple-500 absolute bottom-2 right-2 bg-black/80 rounded-full p-1 text-lg sm:text-xl shadow-md"
-                        />
-                    )}
-                </div>
-                <Controller
-                    name={name}
-                    control={control}
-                    defaultValue={defaultValue || ""}
-                    render={({ field: { onChange } }) => (
-                        <input
-                            id={name}
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => {
-                                onChange(handlePreview(e));
-                            }}
-                        />
-                    )}
-                    rules={{ required: `${name} is required` }}
-                />
-            </label>
-        </div>
+                </label>
+            )}
+        />
     );
 }
 
