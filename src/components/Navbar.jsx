@@ -143,8 +143,18 @@ export default function Navbar() {
     <div className="w-full h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 fixed top-0 left-0 z-40">
       {/* Left section - Logo only */}
       <div className="flex items-center gap-2 sm:gap-4">
-        <Link to="/" className="text-lg sm:text-xl font-bold text-red-600 hover:opacity-80 transition">
-          StreamyPlay
+        <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" className="w-8 h-8 sm:w-9 sm:h-9">
+            <defs>
+              <linearGradient id="navLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style={{stopColor:'#dc2626',stopOpacity:1}} />
+                <stop offset="100%" style={{stopColor:'#b91c1c',stopOpacity:1}} />
+              </linearGradient>
+            </defs>
+            <circle cx="32" cy="32" r="30" fill="url(#navLogoGradient)" />
+            <polygon points="26,18 26,46 50,32" fill="white" />
+          </svg>
+          <span className="text-lg sm:text-xl font-bold text-gray-900">StreamyPlay</span>
         </Link>
       </div>
 
