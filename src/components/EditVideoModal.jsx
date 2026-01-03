@@ -59,20 +59,20 @@ function EditVideoModal({ video, onClose, onSuccess }) {
   if (uploaded) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl p-8 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Changes Saved!</h2>
-          <p className="text-gray-600 mb-6">Your video has been updated successfully.</p>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Changes Saved!</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">Your video has been updated successfully.</p>
           <button
             onClick={() => {
               handleClose();
               onSuccess();
             }}
-            className="px-6 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700"
+            className="px-6 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700"
           >
             Done
           </button>
@@ -83,14 +83,14 @@ function EditVideoModal({ video, onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl w-full max-w-2xl my-8">
+      <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-2xl my-8">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-bold">Edit Video</h2>
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">Edit Video</h2>
           <button
             onClick={handleClose}
             disabled={uploading}
-            className="p-2 hover:bg-gray-100 rounded-full transition disabled:opacity-50"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition disabled:opacity-50 text-gray-900 dark:text-white"
           >
             <MdClose className="text-xl" />
           </button>
@@ -99,8 +99,8 @@ function EditVideoModal({ video, onClose, onSuccess }) {
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
           {/* Current Video Preview */}
-          <div className="bg-gray-100 rounded-lg p-4">
-            <p className="text-sm font-medium text-gray-700 mb-2">Current Video</p>
+          <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Video</p>
             <div className="flex items-center gap-4">
               {thumbnailPreview && (
                 <img
@@ -110,16 +110,16 @@ function EditVideoModal({ video, onClose, onSuccess }) {
                 />
               )}
               <div>
-                <p className="font-medium text-gray-900">{video.title}</p>
-                <p className="text-sm text-gray-500">{video.views || 0} views</p>
+                <p className="font-medium text-gray-900 dark:text-white">{video.title}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{video.views || 0} views</p>
               </div>
             </div>
           </div>
 
           {/* Thumbnail Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Thumbnail {newThumbnailFile && <span className="text-green-600 text-xs">(New selected)</span>}
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Thumbnail {newThumbnailFile && <span className="text-green-600 dark:text-green-400 text-xs">(New selected)</span>}
             </label>
             <div className="flex items-center gap-4">
               {thumbnailPreview && (
@@ -127,7 +127,7 @@ function EditVideoModal({ video, onClose, onSuccess }) {
                   <img
                     src={thumbnailPreview}
                     alt="Thumbnail preview"
-                    className={`w-32 aspect-video rounded-lg object-cover ${newThumbnailFile ? 'ring-2 ring-green-500' : 'ring-1 ring-gray-200'}`}
+                    className={`w-32 aspect-video rounded-lg object-cover ${newThumbnailFile ? 'ring-2 ring-green-500' : 'ring-1 ring-gray-200 dark:ring-gray-600'}`}
                   />
                   {newThumbnailFile && (
                     <button
@@ -142,9 +142,9 @@ function EditVideoModal({ video, onClose, onSuccess }) {
                 </div>
               )}
               <div className="flex flex-col gap-2">
-                <label className="flex flex-col items-center justify-center px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 hover:border-blue-400 transition">
-                  <MdImage className="text-xl text-gray-400 mb-1" />
-                  <p className="text-xs text-gray-600">
+                <label className="flex flex-col items-center justify-center px-4 py-3 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-red-400 dark:hover:border-red-500 transition">
+                  <MdImage className="text-xl text-gray-400 dark:text-gray-500 mb-1" />
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
                     {newThumbnailFile ? 'Change thumbnail' : 'Upload new'}
                   </p>
                   <input
@@ -156,7 +156,7 @@ function EditVideoModal({ video, onClose, onSuccess }) {
                 </label>
               </div>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
               {newThumbnailFile 
                 ? "New thumbnail will be uploaded. Click ✕ to keep the current one."
                 : "Leave unchanged to keep the current thumbnail."
@@ -166,12 +166,12 @@ function EditVideoModal({ video, onClose, onSuccess }) {
 
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Title *
             </label>
             <input
               type="text"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               placeholder="Enter video title"
               {...register("title", { required: "Title is required" })}
             />
@@ -182,31 +182,31 @@ function EditVideoModal({ video, onClose, onSuccess }) {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Description
             </label>
             <textarea
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               placeholder="Tell viewers about your video"
               {...register("description")}
             />
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button
               type="button"
               onClick={handleClose}
               disabled={uploading}
-              className="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded-full font-medium transition disabled:opacity-50"
+              className="px-6 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full font-medium transition disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={uploading}
-              className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-2 bg-red-600 text-white rounded-full font-medium hover:bg-red-700 transition disabled:opacity-50"
             >
               {uploading ? (
                 <>

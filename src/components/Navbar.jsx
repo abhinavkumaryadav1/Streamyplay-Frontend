@@ -140,7 +140,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="w-full h-14 sm:h-16 bg-white border-b border-gray-200 flex items-center justify-between px-2 sm:px-4 fixed top-0 left-0 z-40">
+    <div className="w-full h-14 sm:h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-2 sm:px-4 fixed top-0 left-0 z-40">
       {/* Left section - Logo only */}
       <div className="flex items-center gap-2 sm:gap-4">
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition">
@@ -154,7 +154,7 @@ export default function Navbar() {
             <circle cx="32" cy="32" r="30" fill="url(#navLogoGradient)" />
             <polygon points="26,18 26,46 50,32" fill="white" />
           </svg>
-          <span className="text-lg sm:text-xl font-bold text-gray-900">StreamyPlay</span>
+          <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">StreamyPlay</span>
         </Link>
       </div>
 
@@ -170,27 +170,27 @@ export default function Navbar() {
               onFocus={() => setShowSuggestions(true)}
               onKeyDown={handleKeyDown}
               placeholder="Search videos..."
-              className="w-full border border-gray-300 rounded-l-full px-4 py-2 focus:outline-none focus:border-blue-500 text-sm"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-l-full px-4 py-2 focus:outline-none focus:border-blue-500 text-sm bg-white dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={clearSearch}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-full"
               >
-                <IoClose className="text-gray-500" />
+                <IoClose className="text-gray-500 dark:text-gray-400" />
               </button>
             )}
           </div>
           <button
             type="submit"
-            className="bg-gray-100 border border-l-0 border-gray-300 px-5 py-2 rounded-r-full hover:bg-gray-200 transition"
+            className="bg-gray-100 dark:bg-gray-700 border border-l-0 border-gray-300 dark:border-gray-600 px-5 py-2 rounded-r-full hover:bg-gray-200 dark:hover:bg-gray-600 transition"
           >
-            <IoSearch className="text-xl text-gray-600" />
+            <IoSearch className="text-xl text-gray-600 dark:text-gray-300" />
           </button>
         </form>
-        <button className="ml-3 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition">
-          <MdKeyboardVoice className="text-xl" />
+        <button className="ml-3 bg-gray-100 dark:bg-gray-700 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+          <MdKeyboardVoice className="text-xl dark:text-gray-300" />
         </button>
 
         {/* Search Suggestions Dropdown */}
@@ -249,7 +249,7 @@ export default function Navbar() {
                 )}
               </ul>
             ) : searchQuery.trim() ? (
-              <div className="p-4 text-center text-gray-500 text-sm">
+              <div className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
                 No videos found for "{searchQuery}"
               </div>
             ) : null}
@@ -265,8 +265,8 @@ export default function Navbar() {
             onClick={handleFilterClick}
             className={`hidden sm:flex items-center gap-2 px-4 py-2 rounded-full border transition font-medium text-sm ${
               showFilters || hasActiveFilters
-                ? "bg-gray-900 text-white border-gray-900"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-gray-900 dark:border-white"
+                : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600"
             }`}
           >
             <IoFilter className="text-lg" />
@@ -279,7 +279,7 @@ export default function Navbar() {
 
         {!userData && (
           <button
-            className="text-xs sm:text-sm font-medium px-2 sm:px-4 py-1 sm:py-2 border border-blue-600 text-blue-600 rounded-full hover:bg-blue-50"
+            className="text-xs sm:text-sm font-medium px-2 sm:px-4 py-1 sm:py-2 border border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/30"
             onClick={() => navigate("/login")}
           >
             Login
@@ -297,18 +297,18 @@ export default function Navbar() {
         <div className="relative sm:hidden" ref={mobileMenuRef}>
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="p-2 hover:bg-gray-100 rounded-full transition"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition"
           >
-            <IoEllipsisVertical className="text-xl text-gray-600" />
+            <IoEllipsisVertical className="text-xl text-gray-600 dark:text-gray-300" />
           </button>
 
           {showMobileMenu && (
-            <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50 min-w-[160px]">
+            <div className="absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg overflow-hidden z-50 min-w-[160px]">
               {isHomePage && (
                 <button
                   onClick={handleFilterClick}
-                  className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-left ${
-                    showFilters || hasActiveFilters ? "text-blue-600" : "text-gray-700"
+                  className={`w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition text-left ${
+                    showFilters || hasActiveFilters ? "text-blue-600 dark:text-blue-400" : "text-gray-700 dark:text-gray-200"
                   }`}
                 >
                   <IoFilter className="text-lg" />
@@ -321,7 +321,7 @@ export default function Navbar() {
               <Link
                 to="/settings"
                 onClick={() => setShowMobileMenu(false)}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 transition text-gray-700"
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-200"
               >
                 <MdSettings className="text-lg" />
                 <span className="text-sm font-medium">Settings</span>
@@ -335,15 +335,15 @@ export default function Navbar() {
             <img
               src={typeof userData.avatar === "string" ? userData.avatar : userData.avatar?.url}
               alt="User Avatar"
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-gray-300 cursor-pointer hover:border-blue-500 transition"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-gray-300 dark:border-gray-600 cursor-pointer hover:border-blue-500 transition"
             />
           </Link>
         ) : userData ? (
           <Link to={`/channel/${userData.username}`}>
-            <FaUserCircle className="text-2xl sm:text-3xl text-gray-700 cursor-pointer hover:text-black" />
+            <FaUserCircle className="text-2xl sm:text-3xl text-gray-700 dark:text-gray-300 cursor-pointer hover:text-black dark:hover:text-white" />
           </Link>
         ) : (
-          <FaUserCircle className="text-2xl sm:text-3xl text-gray-700 cursor-pointer hover:text-black" />
+          <FaUserCircle className="text-2xl sm:text-3xl text-gray-700 dark:text-gray-300 cursor-pointer hover:text-black dark:hover:text-white" />
         )}
       </div>
     </div>

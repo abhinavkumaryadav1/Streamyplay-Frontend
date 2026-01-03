@@ -65,7 +65,7 @@ function VideoCardHorizontal({ video }) {
     <Link to={`/watch/${_id}`} className="block group" onClick={handleVideoClick}>
       <div className="flex gap-3 w-full">
         {/* Thumbnail Container */}
-        <div className="relative flex-shrink-0 w-40 sm:w-44 aspect-video rounded-lg overflow-hidden bg-gray-200">
+        <div className="relative flex-shrink-0 w-40 sm:w-44 aspect-video rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
           {thumbnailUrl ? (
             <img
               src={thumbnailUrl}
@@ -74,8 +74,8 @@ function VideoCardHorizontal({ video }) {
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-300">
-              <span className="text-gray-500 text-xs">No Thumbnail</span>
+            <div className="w-full h-full flex items-center justify-center bg-gray-300 dark:bg-gray-600">
+              <span className="text-gray-500 dark:text-gray-400 text-xs">No Thumbnail</span>
             </div>
           )}
           {/* Duration Badge */}
@@ -86,26 +86,26 @@ function VideoCardHorizontal({ video }) {
 
         {/* Video Info */}
         <div className="flex-1 min-w-0 py-0.5">
-          <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-5 group-hover:text-blue-600 transition">
+          <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 leading-5 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
             {title}
           </h3>
           <div className="mt-1">
             <Link
               to={`/channel/${owner?.username}`}
               onClick={(e) => e.stopPropagation()}
-              className="text-xs text-gray-600 hover:text-gray-900"
+              className="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             >
               {owner?.fullName || owner?.username}
             </Link>
           </div>
-          <div className="text-xs text-gray-500 mt-0.5">
+          <div className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
             <span>{formatViews(views)}</span>
             <span className="mx-1">•</span>
             <span>{formatDistanceToNow(createdAt)}</span>
           </div>
           {/* Description preview - only on larger screens */}
           {description && (
-            <p className="hidden sm:block text-xs text-gray-500 mt-1 line-clamp-2">
+            <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
               {description}
             </p>
           )}

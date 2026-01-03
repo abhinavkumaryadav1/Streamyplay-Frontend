@@ -80,7 +80,7 @@ function Login() {
   };
 
   if (loading) {
-    return <LoginSkeleton />;
+    return <LoginSkeleton message="Signing you in..." />;
   }
 
   return (

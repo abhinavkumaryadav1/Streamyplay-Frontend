@@ -100,20 +100,20 @@ function SearchResults() {
   const hasActiveFilters = sortBy !== "createdAt" || sortType !== "desc";
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Search Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-gray-100 rounded-lg">
-                <IoSearch className="text-2xl text-gray-600" />
+              <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                <IoSearch className="text-2xl text-gray-600 dark:text-gray-400" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
                   Search results for "{query}"
                 </h1>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   {videos.docs?.length || 0} videos found
                 </p>
               </div>
@@ -124,8 +124,8 @@ function SearchResults() {
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center gap-2 px-4 py-2 rounded-full border transition font-medium text-sm ${
                 showFilters || hasActiveFilters
-                  ? "bg-gray-900 text-white border-gray-900"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                  ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900 border-gray-900 dark:border-white"
+                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700"
               }`}
             >
               <IoFilter className="text-lg" />
@@ -138,36 +138,36 @@ function SearchResults() {
 
           {/* Filter Panel */}
           {showFilters && (
-            <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 mb-6 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-4">
                   {/* Sort By Dropdown */}
                   <div className="relative" ref={sortDropdownRef}>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">
+                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
                       Sort by
                     </label>
                     <button
                       onClick={() => setShowSortDropdown(!showSortDropdown)}
-                      className="flex items-center justify-between gap-2 min-w-[200px] px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition text-sm"
+                      className="flex items-center justify-between gap-2 min-w-[200px] px-4 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition text-sm"
                     >
-                      <span className="text-gray-700">{currentSortLabel}</span>
+                      <span className="text-gray-700 dark:text-gray-200">{currentSortLabel}</span>
                       <IoChevronDown
-                        className={`text-gray-500 transition-transform ${
+                        className={`text-gray-500 dark:text-gray-400 transition-transform ${
                           showSortDropdown ? "rotate-180" : ""
                         }`}
                       />
                     </button>
 
                     {showSortDropdown && (
-                      <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden">
+                      <div className="absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-10 overflow-hidden">
                         {SORT_OPTIONS.map((option) => (
                           <button
                             key={`${option.sortBy}-${option.sortType}`}
                             onClick={() => handleSortChange(option)}
-                            className={`w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 transition ${
+                            className={`w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition ${
                               sortBy === option.sortBy && sortType === option.sortType
-                                ? "bg-blue-50 text-blue-600 font-medium"
-                                : "text-gray-700"
+                                ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium"
+                                : "text-gray-700 dark:text-gray-200"
                             }`}
                           >
                             {option.label}
@@ -182,7 +182,7 @@ function SearchResults() {
                 {hasActiveFilters && (
                   <button
                     onClick={resetFilters}
-                    className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 transition"
+                    className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
                   >
                     <IoClose className="text-lg" />
                     Reset filters
@@ -192,13 +192,13 @@ function SearchResults() {
 
               {/* Active Filters Tags */}
               {hasActiveFilters && (
-                <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-gray-100">
-                  <span className="text-xs text-gray-500">Active filters:</span>
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
+                <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+                  <span className="text-xs text-gray-500 dark:text-gray-400">Active filters:</span>
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-xs font-medium">
                     {currentSortLabel}
                     <button
                       onClick={resetFilters}
-                      className="hover:text-blue-900 ml-0.5"
+                      className="hover:text-blue-900 dark:hover:text-blue-300 ml-0.5"
                     >
                       <IoClose />
                     </button>
@@ -216,9 +216,9 @@ function SearchResults() {
               ))}
             </div>
           ) : videos.docs.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-              <IoSearch className="text-6xl text-gray-300 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No results found</h3>
+            <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400">
+              <IoSearch className="text-6xl text-gray-300 dark:text-gray-600 mb-4" />
+              <h3 className="text-xl font-semibold mb-2 text-gray-700 dark:text-gray-300">No results found</h3>
               <p className="text-sm">Try different keywords or check your spelling</p>
             </div>
           ) : (
@@ -234,7 +234,7 @@ function SearchResults() {
                 </div>
               }
               endMessage={
-                <p className="text-center text-gray-500 py-8 text-sm">
+                <p className="text-center text-gray-500 dark:text-gray-400 py-8 text-sm">
                   No more results
                 </p>
               }

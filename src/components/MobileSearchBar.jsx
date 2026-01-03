@@ -74,7 +74,7 @@ export default function MobileSearchBar() {
   return (
     <div
       ref={searchRef}
-      className="sm:hidden fixed top-14 left-0 w-full z-30 bg-white px-2 py-2 border-b border-gray-200"
+      className="sm:hidden fixed top-14 left-0 w-full z-30 bg-white dark:bg-gray-900 px-2 py-2 border-b border-gray-200 dark:border-gray-700"
       style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
     >
       <form onSubmit={handleSubmit} className="flex items-center gap-2">
@@ -86,7 +86,7 @@ export default function MobileSearchBar() {
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => setShowSuggestions(true)}
             placeholder="Search videos..."
-            className="w-full rounded-full border border-gray-300 px-4 py-2 pr-8 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
+            className="w-full rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 pr-8 text-sm focus:outline-none focus:border-red-500 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white"
             aria-label="Search"
           />
           {search && (
@@ -95,25 +95,25 @@ export default function MobileSearchBar() {
               onClick={clearSearch}
               className="absolute right-2 top-1/2 -translate-y-1/2 p-1"
             >
-              <IoClose className="text-gray-500" />
+              <IoClose className="text-gray-500 dark:text-gray-400" />
             </button>
           )}
         </div>
         <button
           type="submit"
-          className="bg-gray-100 border border-gray-300 rounded-full p-2 hover:bg-gray-200"
+          className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-700"
           aria-label="Search"
         >
-          <IoSearch className="text-xl text-gray-700" />
+          <IoSearch className="text-xl text-gray-700 dark:text-gray-300" />
         </button>
       </form>
 
       {/* Mobile Search Suggestions */}
       {showSuggestions && (search.trim() || loading) && (
-        <div className="absolute top-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg max-h-80 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 shadow-lg max-h-80 overflow-y-auto">
           {loading ? (
-            <div className="p-4 text-center text-gray-500">
-              <div className="animate-spin w-5 h-5 border-2 border-gray-300 border-t-blue-500 rounded-full mx-auto"></div>
+            <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+              <div className="animate-spin w-5 h-5 border-2 border-gray-300 dark:border-gray-600 border-t-red-500 rounded-full mx-auto"></div>
             </div>
           ) : suggestions.length > 0 ? (
             <ul>
@@ -127,7 +127,7 @@ export default function MobileSearchBar() {
                     <Link
                       to={`/watch/${video._id}`}
                       onClick={() => setShowSuggestions(false)}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 border-b border-gray-100"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700"
                     >
                       {thumbnailUrl && (
                         <img
@@ -136,7 +136,7 @@ export default function MobileSearchBar() {
                           className="w-16 h-10 object-cover rounded flex-shrink-0"
                         />
                       )}
-                      <span className="text-sm text-gray-700 truncate flex-1">
+                      <span className="text-sm text-gray-700 dark:text-gray-300 truncate flex-1">
                         {video.title}
                       </span>
                     </Link>
@@ -146,7 +146,7 @@ export default function MobileSearchBar() {
               <li>
                 <button
                   onClick={handleSubmit}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 hover:bg-gray-50 text-blue-600 text-sm"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 text-red-600 text-sm"
                 >
                   <IoSearch />
                   <span>View all results for "{search}"</span>
@@ -154,7 +154,7 @@ export default function MobileSearchBar() {
               </li>
             </ul>
           ) : search.trim() ? (
-            <div className="p-4 text-center text-gray-500 text-sm">
+            <div className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
               No videos found for "{search}"
             </div>
           ) : null}

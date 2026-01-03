@@ -33,7 +33,7 @@ function LikedVideos() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Header */}
@@ -42,8 +42,8 @@ function LikedVideos() {
               <BiLike className="text-2xl text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Liked Videos</h1>
-              <p className="text-sm text-gray-600">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Liked Videos</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 {likedVideos?.length || 0} videos
               </p>
             </div>
@@ -57,9 +57,9 @@ function LikedVideos() {
               ))}
             </div>
           ) : likedVideos?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-              <BiLike className="text-6xl text-gray-300 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No liked videos yet</h3>
+            <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400">
+              <BiLike className="text-6xl text-gray-300 dark:text-gray-600 mb-4" />
+              <h3 className="text-xl font-semibold mb-2 text-gray-700 dark:text-gray-300">No liked videos yet</h3>
               <p className="text-sm">Videos you like will appear here</p>
             </div>
           ) : (

@@ -92,8 +92,8 @@ function Comment({ comment }) {
             className="w-10 h-10 rounded-full object-cover"
           />
         ) : (
-          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-            <span className="text-gray-600 font-semibold">
+          <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+            <span className="text-gray-600 dark:text-gray-300 font-semibold">
               {owner?.username?.charAt(0)?.toUpperCase() || "U"}
             </span>
           </div>
@@ -105,11 +105,11 @@ function Comment({ comment }) {
         <div className="flex items-center gap-2">
           <Link
             to={`/channel/${owner?.username}`}
-            className="text-sm font-semibold text-gray-900 hover:text-gray-700"
+            className="text-sm font-semibold text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
           >
             @{owner?.username}
           </Link>
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-gray-500 dark:text-gray-400">
             {formatDistanceToNow(comment.createdAt)}
           </span>
         </div>
@@ -128,7 +128,7 @@ function Comment({ comment }) {
                   handleCancelEdit();
                 }
               }}
-              className="w-full border border-gray-300 rounded-lg outline-none p-2 text-sm bg-transparent resize-none focus:border-blue-500"
+              className="w-full border border-gray-300 dark:border-gray-600 rounded-lg outline-none p-2 text-sm bg-transparent resize-none focus:border-blue-500 text-gray-900 dark:text-white"
               rows={2}
               autoFocus
             />
@@ -136,14 +136,14 @@ function Comment({ comment }) {
               <button
                 onClick={handleCancelEdit}
                 disabled={isUpdating}
-                className="px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-full disabled:opacity-50"
+                className="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleEdit}
                 disabled={!editedContent.trim() || isUpdating}
-                className="px-3 py-1.5 text-sm font-medium bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center gap-1"
+                className="px-3 py-1.5 text-sm font-medium bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-600 disabled:cursor-not-allowed flex items-center gap-1"
               >
                 {isUpdating ? (
                   <>
@@ -160,7 +160,7 @@ function Comment({ comment }) {
             </div>
           </div>
         ) : (
-          <p className="text-sm text-gray-800 mt-1 break-words">{comment.content}</p>
+          <p className="text-sm text-gray-800 dark:text-gray-200 mt-1 break-words">{comment.content}</p>
         )}
 
         {/* Actions */}
@@ -168,8 +168,8 @@ function Comment({ comment }) {
           <div className="flex items-center gap-4 mt-2">
             <button
               onClick={handleLike}
-              className={`flex items-center gap-1 text-sm hover:bg-gray-100 p-1 rounded-full transition ${
-                isLiked ? "text-blue-600" : "text-gray-600"
+              className={`flex items-center gap-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 p-1 rounded-full transition ${
+                isLiked ? "text-blue-600 dark:text-blue-400" : "text-gray-600 dark:text-gray-400"
               }`}
             >
               <BiLike className="text-lg" />
@@ -184,26 +184,26 @@ function Comment({ comment }) {
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="p-2 hover:bg-gray-100 rounded-full opacity-0 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full opacity-0 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition"
           >
-            <HiDotsVertical className="text-gray-600" />
+            <HiDotsVertical className="text-gray-600 dark:text-gray-400" />
           </button>
           
           {showMenu && (
-            <div className="absolute right-0 top-8 bg-white shadow-lg rounded-lg py-2 z-20 min-w-[140px] border border-gray-100">
+            <div className="absolute right-0 top-8 bg-white dark:bg-gray-800 shadow-lg rounded-lg py-2 z-20 min-w-[140px] border border-gray-100 dark:border-gray-700">
               <button
                 onClick={() => {
                   setIsEditing(true);
                   setShowMenu(false);
                 }}
-                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <MdEdit className="text-base" /> Edit
               </button>
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
+                className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-50"
               >
                 {isDeleting ? (
                   <>

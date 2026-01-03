@@ -145,16 +145,16 @@ function WatchPage() {
 
   if (!video) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="flex items-center justify-center h-96">
-          <p className="text-gray-500 text-lg">Video not found</p>
+          <p className="text-gray-500 dark:text-gray-400 text-lg">Video not found</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className={`pt-28 sm:pt-20 pb-20 sm:pb-8 ${theaterMode ? "" : "sm:ml-64"}`}>
         {/* Theater Mode Video */}
         {theaterMode && (
@@ -189,19 +189,19 @@ function WatchPage() {
 
             {/* Video Info */}
             <div className="mt-4">
-              <h1 className="text-xl font-bold text-gray-900 leading-snug">
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white leading-snug">
                 {video.title}
               </h1>
 
               {/* Views and Date */}
-              <div className="flex items-center gap-2 text-sm text-gray-600 mt-2">
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mt-2">
                 <span>{formatViews(video.views)}</span>
                 <span>•</span>
                 <span>{formatDistanceToNow(video.createdAt)}</span>
               </div>
 
               {/* Channel Info and Actions */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4 pb-4 border-b border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mt-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                 {/* Channel */}
                 <div className="flex items-center gap-3">
                   <Link to={`/channel/${owner?.username}`}>
@@ -212,8 +212,8 @@ function WatchPage() {
                         className="w-10 h-10 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-                        <span className="text-gray-600 font-semibold">
+                      <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                        <span className="text-gray-600 dark:text-gray-300 font-semibold">
                           {owner?.username?.charAt(0)?.toUpperCase() || "U"}
                         </span>
                       </div>
@@ -222,11 +222,11 @@ function WatchPage() {
                   <div>
                     <Link
                       to={`/channel/${owner?.username}`}
-                      className="font-semibold text-gray-900 hover:text-gray-700"
+                      className="font-semibold text-gray-900 dark:text-white hover:text-gray-700 dark:hover:text-gray-300"
                     >
                       {owner?.fullName || owner?.username}
                     </Link>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
                       {owner?.subscribersCount || 0} subscribers
                     </p>
                   </div>
@@ -236,7 +236,7 @@ function WatchPage() {
                       disabled={isSubscribing}
                       className={`ml-4 px-4 py-2 rounded-full text-sm font-semibold transition disabled:opacity-70 disabled:cursor-not-allowed ${
                         isSubscribed
-                          ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          ? "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600"
                           : "bg-red-600 text-white hover:bg-red-700"
                       }`}
                     >
@@ -248,18 +248,18 @@ function WatchPage() {
                 {/* Action Buttons */}
                 <div className="flex items-center gap-2 flex-wrap">
                   {/* Like/Dislike */}
-                  <div className="flex items-center bg-gray-100 rounded-full">
+                  <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-full">
                     <button
                       onClick={handleLike}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-l-full hover:bg-gray-200 transition ${
-                        isLiked ? "text-blue-600" : ""
+                      className={`flex items-center gap-2 px-4 py-2 rounded-l-full hover:bg-gray-200 dark:hover:bg-gray-700 transition ${
+                        isLiked ? "text-blue-600 dark:text-blue-400" : "text-gray-700 dark:text-gray-200"
                       }`}
                     >
                       <BiLike className={`text-xl ${isLiked ? "fill-current" : ""}`} />
                       <span className="text-sm font-medium">{likesCount}</span>
                     </button>
-                    <div className="w-px h-6 bg-gray-300"></div>
-                    <button className="px-4 py-2 rounded-r-full hover:bg-gray-200 transition">
+                    <div className="w-px h-6 bg-gray-300 dark:bg-gray-600"></div>
+                    <button className="px-4 py-2 rounded-r-full hover:bg-gray-200 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-200">
                       <BiDislike className="text-xl" />
                     </button>
                   </div>
@@ -277,7 +277,7 @@ function WatchPage() {
                         alert("Link copied to clipboard!");
                       }
                     }}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200 transition"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition text-gray-700 dark:text-gray-200"
                   >
                     <BiShare className="text-xl" />
                     <span className="text-sm font-medium">Share</span>
@@ -286,9 +286,9 @@ function WatchPage() {
               </div>
 
               {/* Description */}
-              <div className="mt-4 p-3 bg-gray-100 rounded-xl">
+              <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded-xl">
                 <div
-                  className={`text-sm text-gray-700 whitespace-pre-wrap ${
+                  className={`text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap ${
                     !showFullDescription ? "line-clamp-3" : ""
                   }`}
                 >
@@ -297,7 +297,7 @@ function WatchPage() {
                 {video.description?.length > 200 && (
                   <button
                     onClick={() => setShowFullDescription(!showFullDescription)}
-                    className="text-sm font-semibold text-gray-900 mt-2 hover:underline"
+                    className="text-sm font-semibold text-gray-900 dark:text-white mt-2 hover:underline"
                   >
                     {showFullDescription ? "Show less" : "...more"}
                   </button>
@@ -311,17 +311,17 @@ function WatchPage() {
 
           {/* Sidebar - Recommended Videos */}
           <div className="w-full lg:w-[400px] flex-shrink-0">
-            <h3 className="text-lg font-semibold mb-4">Related Videos</h3>
+            <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Related Videos</h3>
             <div className="flex flex-col gap-3">
               {videos.docs.length === 0 ? (
                 // Skeleton loading for related videos
                 [...Array(5)].map((_, i) => (
                   <div key={i} className="flex gap-3 animate-pulse">
-                    <div className="w-40 aspect-video bg-gray-300 rounded-lg flex-shrink-0"></div>
+                    <div className="w-40 aspect-video bg-gray-300 dark:bg-gray-700 rounded-lg flex-shrink-0"></div>
                     <div className="flex-1 space-y-2">
-                      <div className="h-4 bg-gray-300 rounded w-full"></div>
-                      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                      <div className="h-3 bg-gray-300 rounded w-1/2"></div>
+                      <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full"></div>
+                      <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-3/4"></div>
+                      <div className="h-3 bg-gray-300 dark:bg-gray-700 rounded w-1/2"></div>
                     </div>
                   </div>
                 ))
@@ -344,18 +344,18 @@ function WatchPage() {
 // Skeleton Loading Component
 function WatchPageSkeleton() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
       <div className="flex flex-col lg:flex-row gap-6 px-4 sm:px-6 lg:px-8 animate-pulse">
         <div className="flex-1">
-          <div className="w-full aspect-video bg-gray-300 rounded-xl"></div>
+          <div className="w-full aspect-video bg-gray-300 dark:bg-gray-700 rounded-xl"></div>
           <div className="mt-4 space-y-3">
-            <div className="h-6 bg-gray-300 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+            <div className="h-6 bg-gray-300 dark:bg-gray-700 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-1/4"></div>
             <div className="flex items-center gap-3 mt-4">
-              <div className="w-10 h-10 rounded-full bg-gray-300"></div>
+              <div className="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-700"></div>
               <div className="space-y-2">
-                <div className="h-4 bg-gray-300 rounded w-32"></div>
-                <div className="h-3 bg-gray-300 rounded w-24"></div>
+                <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-32"></div>
+                <div className="h-3 bg-gray-300 dark:bg-gray-700 rounded w-24"></div>
               </div>
             </div>
           </div>
@@ -363,10 +363,10 @@ function WatchPageSkeleton() {
         <div className="w-full lg:w-[400px]">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="flex gap-3 mb-3">
-              <div className="w-40 aspect-video bg-gray-300 rounded-lg"></div>
+              <div className="w-40 aspect-video bg-gray-300 dark:bg-gray-700 rounded-lg"></div>
               <div className="flex-1 space-y-2">
-                <div className="h-4 bg-gray-300 rounded"></div>
-                <div className="h-3 bg-gray-300 rounded w-2/3"></div>
+                <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded"></div>
+                <div className="h-3 bg-gray-300 dark:bg-gray-700 rounded w-2/3"></div>
               </div>
             </div>
           ))}

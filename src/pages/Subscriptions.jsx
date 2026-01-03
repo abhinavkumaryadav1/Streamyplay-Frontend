@@ -78,7 +78,7 @@ function Subscriptions() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Header */}
@@ -88,21 +88,21 @@ function Subscriptions() {
                 <MdSubscriptions className="text-2xl text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Subscriptions</h1>
-                <p className="text-sm text-gray-600">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Subscriptions</h1>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   {subscribedChannels?.length || 0} channels
                 </p>
               </div>
             </div>
             
             {/* View Toggle */}
-            <div className="flex bg-gray-200 rounded-lg p-1">
+            <div className="flex bg-gray-200 dark:bg-gray-800 rounded-lg p-1">
               <button
                 onClick={() => setViewMode("videos")}
                 className={`px-4 py-1.5 text-sm font-medium rounded-md transition ${
                   viewMode === "videos"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
                 Latest Videos
@@ -111,8 +111,8 @@ function Subscriptions() {
                 onClick={() => setViewMode("channels")}
                 className={`px-4 py-1.5 text-sm font-medium rounded-md transition ${
                   viewMode === "channels"
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-600 hover:text-gray-900"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
                 Channels
@@ -143,13 +143,13 @@ function Subscriptions() {
                           className="w-16 h-16 rounded-full object-cover mb-1.5 group-hover:ring-2 ring-blue-500 transition"
                         />
                       ) : (
-                        <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center mb-1.5 group-hover:ring-2 ring-blue-500 transition">
-                          <span className="text-xl text-gray-600 font-bold">
+                        <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center mb-1.5 group-hover:ring-2 ring-blue-500 transition">
+                          <span className="text-xl text-gray-600 dark:text-gray-300 font-bold">
                             {channel.username?.charAt(0)?.toUpperCase()}
                           </span>
                         </div>
                       )}
-                      <span className="text-xs text-gray-700 max-w-[70px] truncate text-center">
+                      <span className="text-xs text-gray-700 dark:text-gray-300 max-w-[70px] truncate text-center">
                         {channel.fullName || channel.username}
                       </span>
                     </Link>
@@ -175,9 +175,9 @@ function Subscriptions() {
               </div>
             )
           ) : subscribedChannels?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-              <MdSubscriptions className="text-6xl text-gray-300 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No subscriptions yet</h3>
+            <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400">
+              <MdSubscriptions className="text-6xl text-gray-300 dark:text-gray-600 mb-4" />
+              <h3 className="text-xl font-semibold mb-2 text-gray-700 dark:text-gray-300">No subscriptions yet</h3>
               <p className="text-sm text-center max-w-md">
                 Subscribe to channels to see their latest videos here
               </p>
@@ -191,9 +191,9 @@ function Subscriptions() {
           ) : viewMode === "videos" ? (
             // Videos Grid
             subscriptionVideos.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-gray-500">
+              <div className="flex flex-col items-center justify-center py-20 text-gray-500 dark:text-gray-400">
                 <svg
-                  className="w-16 h-16 text-gray-300 mb-4"
+                  className="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -205,7 +205,7 @@ function Subscriptions() {
                     d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
                   />
                 </svg>
-                <h3 className="text-xl font-semibold mb-2">No videos yet</h3>
+                <h3 className="text-xl font-semibold mb-2 text-gray-700 dark:text-gray-300">No videos yet</h3>
                 <p className="text-sm text-center">
                   Your subscribed channels haven't uploaded any videos yet
                 </p>
@@ -241,19 +241,19 @@ function Subscriptions() {
                       <img
                         src={avatarUrl}
                         alt={channel.username}
-                        className="w-24 h-24 rounded-full object-cover mb-3 group-hover:ring-4 ring-gray-200 transition"
+                        className="w-24 h-24 rounded-full object-cover mb-3 group-hover:ring-4 ring-gray-200 dark:ring-gray-600 transition"
                       />
                     ) : (
-                      <div className="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center mb-3 group-hover:ring-4 ring-gray-200 transition">
-                        <span className="text-3xl text-gray-600 font-bold">
+                      <div className="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center mb-3 group-hover:ring-4 ring-gray-200 dark:ring-gray-600 transition">
+                        <span className="text-3xl text-gray-600 dark:text-gray-300 font-bold">
                           {channel.username?.charAt(0)?.toUpperCase()}
                         </span>
                       </div>
                     )}
-                    <h3 className="font-medium text-gray-900 group-hover:text-blue-600 transition line-clamp-1">
+                    <h3 className="font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition line-clamp-1">
                       {channel.fullName || channel.username}
                     </h3>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       @{channel.username}
                     </p>
                   </Link>
@@ -281,7 +281,7 @@ function SubscriptionVideoCard({ video, formatDuration, formatViews }) {
     <Link to={`/watch/${video._id}`} className="block group">
       <div className="flex flex-col w-full">
         {/* Thumbnail */}
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-200">
+        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700">
           {thumbnailUrl ? (
             <img
               src={thumbnailUrl}
@@ -290,8 +290,8 @@ function SubscriptionVideoCard({ video, formatDuration, formatViews }) {
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-300">
-              <span className="text-gray-500 text-sm">No Thumbnail</span>
+            <div className="w-full h-full flex items-center justify-center bg-gray-300 dark:bg-gray-600">
+              <span className="text-gray-500 dark:text-gray-400 text-sm">No Thumbnail</span>
             </div>
           )}
           {/* Duration Badge */}
@@ -315,8 +315,8 @@ function SubscriptionVideoCard({ video, formatDuration, formatViews }) {
                 className="w-9 h-9 rounded-full object-cover hover:opacity-80 transition"
               />
             ) : (
-              <div className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center">
-                <span className="text-gray-600 text-sm font-semibold">
+              <div className="w-9 h-9 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                <span className="text-gray-600 dark:text-gray-300 text-sm font-semibold">
                   {video.channel?.username?.charAt(0)?.toUpperCase() || "U"}
                 </span>
               </div>
@@ -325,17 +325,17 @@ function SubscriptionVideoCard({ video, formatDuration, formatViews }) {
 
           {/* Title and Meta */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-5 group-hover:text-blue-600 transition">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 leading-5 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
               {video.title}
             </h3>
             <Link
               to={`/channel/${video.channel?.username}`}
               onClick={(e) => e.stopPropagation()}
-              className="text-xs text-gray-600 hover:text-gray-900 mt-1 block"
+              className="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mt-1 block"
             >
               {video.channel?.fullName || video.channel?.username}
             </Link>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
               {formatViews(video.views)} • {formatDistanceToNow(video.createdAt)}
             </p>
           </div>
@@ -349,9 +349,9 @@ function SubscriptionVideoCard({ video, formatDuration, formatViews }) {
 function ChannelCardSkeleton() {
   return (
     <div className="flex flex-col items-center animate-pulse">
-      <div className="w-24 h-24 rounded-full bg-gray-300 mb-3"></div>
-      <div className="h-4 bg-gray-300 rounded w-20 mb-2"></div>
-      <div className="h-3 bg-gray-300 rounded w-16"></div>
+      <div className="w-24 h-24 rounded-full bg-gray-300 dark:bg-gray-700 mb-3"></div>
+      <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-20 mb-2"></div>
+      <div className="h-3 bg-gray-300 dark:bg-gray-700 rounded w-16"></div>
     </div>
   );
 }

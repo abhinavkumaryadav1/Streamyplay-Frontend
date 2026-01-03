@@ -98,7 +98,7 @@ function SignUp() {
     };
 
     if (loading) {
-        return <LoginSkeleton />;
+        return <LoginSkeleton message="Creating your account..." />;
     }
 
     return (

@@ -125,9 +125,9 @@ function ChannelPage() {
 
   if (!profileData) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="flex items-center justify-center h-96">
-          <p className="text-gray-500 text-lg">Channel not found</p>
+          <p className="text-gray-500 dark:text-gray-400 text-lg">Channel not found</p>
         </div>
       </div>
     );
@@ -136,10 +136,10 @@ function ChannelPage() {
   const isOwner = userData?._id === profileData?._id;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         {/* Cover Image */}
-        <div className="w-full h-32 sm:h-48 lg:h-56 bg-gradient-to-r from-gray-300 to-gray-400 overflow-hidden">
+        <div className="w-full h-32 sm:h-48 lg:h-56 bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-700 dark:to-gray-600 overflow-hidden">
           {coverUrl && (
             <img
               src={coverUrl}
@@ -158,11 +158,11 @@ function ChannelPage() {
                 <img
                   src={avatarUrl}
                   alt={profileData.username}
-                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white shadow-lg"
+                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg"
                 />
               ) : (
-                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-300 border-4 border-white shadow-lg flex items-center justify-center">
-                  <span className="text-4xl text-gray-600 font-bold">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-300 dark:bg-gray-600 border-4 border-white dark:border-gray-800 shadow-lg flex items-center justify-center">
+                  <span className="text-4xl text-gray-600 dark:text-gray-300 font-bold">
                     {profileData.username?.charAt(0)?.toUpperCase()}
                   </span>
                 </div>
@@ -171,10 +171,10 @@ function ChannelPage() {
 
             {/* Channel Details */}
             <div className="flex-1 pb-2">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
                 {profileData.fullName || profileData.username}
               </h1>
-              <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600 mt-1">
+              <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mt-1">
                 <span>@{profileData.username}</span>
                 <span>•</span>
                 <span>{formatCount(subscribersCount)} subscribers</span>
@@ -182,7 +182,7 @@ function ChannelPage() {
                 <span>{videos.docs?.length || 0} videos</span>
               </div>
               {profileData.description && (
-                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 line-clamp-2">
                   {profileData.description}
                 </p>
               )}
@@ -193,7 +193,7 @@ function ChannelPage() {
               {isOwner ? (
                 <Link
                   to="/dashboard"
-                  className="px-6 py-2.5 bg-gray-900 text-white rounded-full text-sm font-semibold hover:bg-gray-800 transition"
+                  className="px-6 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full text-sm font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition"
                 >
                   Manage Channel
                 </Link>
@@ -203,7 +203,7 @@ function ChannelPage() {
                   disabled={isSubscribing}
                   className={`px-6 py-2.5 rounded-full text-sm font-semibold transition disabled:opacity-70 disabled:cursor-not-allowed ${
                     isSubscribed
-                      ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      ? "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
                       : "bg-red-600 text-white hover:bg-red-700"
                   }`}
                 >
@@ -214,15 +214,15 @@ function ChannelPage() {
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-6 mt-6 border-b border-gray-200">
+          <div className="flex gap-6 mt-6 border-b border-gray-200 dark:border-gray-700">
             {["videos", "playlists", "about"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`pb-3 text-sm font-semibold capitalize transition ${
                   activeTab === tab
-                    ? "text-gray-900 border-b-2 border-gray-900"
-                    : "text-gray-600 hover:text-gray-900"
+                    ? "text-gray-900 dark:text-white border-b-2 border-gray-900 dark:border-white"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
                 {tab}
@@ -241,9 +241,9 @@ function ChannelPage() {
                     ))}
                   </div>
                 ) : videos.docs.length === 0 ? (
-                  <div className="text-center py-16 text-gray-500">
+                  <div className="text-center py-16 text-gray-500 dark:text-gray-400">
                     <svg
-                      className="w-16 h-16 mx-auto mb-4 text-gray-300"
+                      className="w-16 h-16 mx-auto mb-4 text-gray-300 dark:text-gray-600"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -269,7 +269,7 @@ function ChannelPage() {
             )}
 
             {activeTab === "playlists" && (
-              <div className="text-center py-16 text-gray-500">
+              <div className="text-center py-16 text-gray-500 dark:text-gray-400">
                 <p className="text-lg font-medium">No playlists</p>
                 <p className="text-sm mt-1">This channel has no public playlists.</p>
               </div>
@@ -277,13 +277,13 @@ function ChannelPage() {
 
             {activeTab === "about" && (
               <div className="max-w-2xl">
-                <h3 className="text-lg font-semibold mb-4">About</h3>
-                <p className="text-gray-700 whitespace-pre-wrap">
+                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">About</h3>
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
                   {profileData.description || "No description provided."}
                 </p>
-                <div className="mt-6 pt-6 border-t border-gray-200">
-                  <h4 className="font-semibold mb-3">Stats</h4>
-                  <div className="text-sm text-gray-600 space-y-2">
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <h4 className="font-semibold mb-3 text-gray-900 dark:text-white">Stats</h4>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                     <p>Joined {new Date(profileData.createdAt).toLocaleDateString()}</p>
                     <p>{formatCount(subscribersCount)} subscribers</p>
                     <p>{videos.docs?.length || 0} videos</p>
@@ -301,20 +301,20 @@ function ChannelPage() {
 // Skeleton Loading
 function ChannelPageSkeleton() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64 animate-pulse">
-      <div className="w-full h-32 sm:h-48 lg:h-56 bg-gray-300"></div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64 animate-pulse">
+      <div className="w-full h-32 sm:h-48 lg:h-56 bg-gray-300 dark:bg-gray-700"></div>
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-end gap-4 -mt-12">
-          <div className="w-32 h-32 rounded-full bg-gray-300 border-4 border-white"></div>
+          <div className="w-32 h-32 rounded-full bg-gray-300 dark:bg-gray-700 border-4 border-white dark:border-gray-800"></div>
           <div className="flex-1 pb-2 space-y-2">
-            <div className="h-8 bg-gray-300 rounded w-48"></div>
-            <div className="h-4 bg-gray-300 rounded w-64"></div>
+            <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded w-48"></div>
+            <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-64"></div>
           </div>
         </div>
-        <div className="flex gap-6 mt-6 border-b border-gray-200 pb-3">
-          <div className="h-4 bg-gray-300 rounded w-16"></div>
-          <div className="h-4 bg-gray-300 rounded w-16"></div>
-          <div className="h-4 bg-gray-300 rounded w-16"></div>
+        <div className="flex gap-6 mt-6 border-b border-gray-200 dark:border-gray-700 pb-3">
+          <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-16"></div>
+          <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-16"></div>
+          <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-16"></div>
         </div>
       </div>
     </div>

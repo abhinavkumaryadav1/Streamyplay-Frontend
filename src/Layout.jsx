@@ -9,7 +9,7 @@ import AuthModal from "./components/AuthModal";
 
 function Layout() {
     return (
-        <>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
             <Navbar />
             <MobileSearchBar />
             <div className="sm:flex flex-none">
@@ -20,7 +20,7 @@ function Layout() {
             </div>
             <BottomNav />
             <AuthModal />
-        </>
+        </div>
     );
 }
 

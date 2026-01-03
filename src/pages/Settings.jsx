@@ -9,6 +9,7 @@ import {
   changePassword,
   userLogout,
 } from "../Store/Slices/authSlice";
+import { setTheme } from "../Store/Slices/uiSlice";
 import {
   MdSettings,
   MdPerson,
@@ -19,6 +20,10 @@ import {
   MdCheck,
   MdClose,
   MdLogout,
+  MdPalette,
+  MdLightMode,
+  MdDarkMode,
+  MdComputer,
 } from "react-icons/md";
 import { BiArrowBack } from "react-icons/bi";
 
@@ -26,15 +31,16 @@ function Settings() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userData, loading } = useSelector((state) => state.auth);
+  const { theme } = useSelector((state) => state.ui);
   const [activeTab, setActiveTab] = useState("profile");
 
   // Redirect if not logged in
   if (!userData) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-28 sm:pt-20 pb-20 sm:pb-8 sm:ml-64">
         <div className="flex flex-col items-center justify-center h-96">
-          <MdSettings className="text-6xl text-gray-300 mb-4" />
-          <p className="text-gray-500 text-lg mb-4">Please sign in to access settings</p>
+          <MdSettings className="text-6xl text-gray-300 dark:text-gray-600 mb-4" />
+          <p className="text-gray-500 dark:text-gray-400 text-lg mb-4">Please sign in to access settings</p>
           <button
             onClick={() => navigate("/login")}
             className="px-6 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition"
@@ -50,27 +56,28 @@ function Settings() {
     { id: "profile", label: "Profile", icon: MdPerson },
     { id: "images", label: "Avatar & Cover", icon: MdImage },
     { id: "password", label: "Password", icon: MdLock },
+    { id: "appearance", label: "Appearance", icon: MdPalette },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="pt-16 sm:pt-20 pb-24 sm:pb-8 sm:ml-64">
         <div className="px-3 sm:px-6 lg:px-8 max-w-4xl mx-auto">
           {/* Header */}
           <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
             <button
               onClick={() => navigate(-1)}
-              className="p-2 hover:bg-gray-200 rounded-full transition"
+              className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition text-gray-700 dark:text-gray-200"
             >
               <BiArrowBack className="text-xl" />
             </button>
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="p-2 sm:p-3 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg">
+              <div className="p-2 sm:p-3 bg-gradient-to-br from-gray-700 to-gray-900 dark:from-gray-600 dark:to-gray-800 rounded-lg">
                 <MdSettings className="text-xl sm:text-2xl text-white" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Settings</h1>
-                <p className="text-xs sm:text-sm text-gray-600">Manage your account</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Manage your account</p>
               </div>
             </div>
           </div>
@@ -83,30 +90,31 @@ function Settings() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition ${
                   activeTab === tab.id
-                    ? "bg-gray-900 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
               >
                 <tab.icon className="text-base sm:text-lg" />
                 <span className="hidden xs:inline sm:inline">{tab.label}</span>
-                <span className="xs:hidden sm:hidden">{tab.id === 'images' ? 'Images' : tab.label}</span>
+                <span className="xs:hidden sm:hidden">{tab.id === 'images' ? 'Images' : tab.id === 'appearance' ? 'Theme' : tab.label}</span>
               </button>
             ))}
           </div>
 
           {/* Tab Content */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
             {activeTab === "profile" && <ProfileSection userData={userData} loading={loading} dispatch={dispatch} />}
             {activeTab === "images" && <ImagesSection userData={userData} loading={loading} dispatch={dispatch} />}
             {activeTab === "password" && <PasswordSection loading={loading} dispatch={dispatch} />}
+            {activeTab === "appearance" && <AppearanceSection theme={theme} dispatch={dispatch} />}
           </div>
 
           {/* Logout Section */}
-          <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6">
+          <div className="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900">Sign Out</h3>
-                <p className="text-xs sm:text-sm text-gray-500 mt-1">Sign out from your account on this device</p>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Sign Out</h3>
+                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">Sign out from your account on this device</p>
               </div>
               <button
                 onClick={() => dispatch(userLogout())}
@@ -142,37 +150,37 @@ function ProfileSection({ userData, loading, dispatch }) {
 
   return (
     <div>
-      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2">
         <MdPerson className="text-lg sm:text-xl" />
         Profile Information
       </h2>
-      <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
+      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
         Update your personal information
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
         {/* Username (read-only) */}
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
             Username
           </label>
           <input
             type="text"
             value={`@${userData.username}`}
             disabled
-            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-gray-500 cursor-not-allowed text-sm"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed text-sm"
           />
-          <p className="text-[10px] sm:text-xs text-gray-500 mt-1">Username cannot be changed</p>
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-1">Username cannot be changed</p>
         </div>
 
         {/* Full Name */}
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
             Full Name
           </label>
           <input
             type="text"
-            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             placeholder="Enter your full name"
             {...register("fullName", { required: "Full name is required" })}
           />
@@ -183,12 +191,12 @@ function ProfileSection({ userData, loading, dispatch }) {
 
         {/* Email */}
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
             Email
           </label>
           <input
             type="email"
-            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             placeholder="Enter your email"
             {...register("email", {
               required: "Email is required",
@@ -308,17 +316,17 @@ function ImagesSection({ userData, loading, dispatch }) {
 
   return (
     <div>
-      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2">
         <MdImage className="text-lg sm:text-xl" />
         Profile Images
       </h2>
-      <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
+      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
         Update your avatar and cover image
       </p>
 
       {/* Avatar Section */}
       <div className="mb-6 sm:mb-8">
-        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">
           Avatar
         </label>
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
@@ -326,12 +334,12 @@ function ImagesSection({ userData, loading, dispatch }) {
             <img
               src={avatarPreview || currentAvatar}
               alt="Avatar"
-              className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover ${avatarPreview ? 'ring-4 ring-blue-500' : 'ring-2 ring-gray-200'}`}
+              className={`w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover ${avatarPreview ? 'ring-4 ring-blue-500' : 'ring-2 ring-gray-200 dark:ring-gray-600'}`}
             />
             <button
               type="button"
               onClick={() => avatarInputRef.current?.click()}
-              className="absolute bottom-0 right-0 p-1.5 sm:p-2 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition"
+              className="absolute bottom-0 right-0 p-1.5 sm:p-2 bg-gray-900 dark:bg-gray-600 text-white rounded-full hover:bg-gray-700 dark:hover:bg-gray-500 transition"
             >
               <MdCameraAlt className="text-xs sm:text-sm" />
             </button>
@@ -346,7 +354,7 @@ function ImagesSection({ userData, loading, dispatch }) {
           
           {avatarFile && (
             <div className="flex flex-col gap-2">
-              <p className="text-xs sm:text-sm text-gray-600">New avatar selected</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">New avatar selected</p>
               <div className="flex gap-2">
                 <button
                   onClick={handleAvatarUpload}
@@ -370,7 +378,7 @@ function ImagesSection({ userData, loading, dispatch }) {
                 <button
                   onClick={cancelAvatarChange}
                   disabled={uploadingAvatar}
-                  className="flex items-center gap-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-200 text-gray-700 text-xs sm:text-sm rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 text-xs sm:text-sm rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition disabled:opacity-50"
                 >
                   <MdClose /> Cancel
                 </button>
@@ -382,7 +390,7 @@ function ImagesSection({ userData, loading, dispatch }) {
 
       {/* Cover Image Section */}
       <div>
-        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 sm:mb-3">
           Cover Image
         </label>
         <div className="space-y-3 sm:space-y-4">
@@ -395,8 +403,8 @@ function ImagesSection({ userData, loading, dispatch }) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-r from-gray-300 to-gray-400 flex items-center justify-center">
-                  <p className="text-xs sm:text-sm text-gray-600">No cover image</p>
+                <div className="w-full h-full bg-gradient-to-r from-gray-300 to-gray-400 dark:from-gray-600 dark:to-gray-700 flex items-center justify-center">
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">No cover image</p>
                 </div>
               )}
             </div>
@@ -420,7 +428,7 @@ function ImagesSection({ userData, loading, dispatch }) {
           
           {coverFile && (
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-              <p className="text-xs sm:text-sm text-gray-600">New cover image selected</p>
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">New cover image selected</p>
               <div className="flex gap-2">
                 <button
                   onClick={handleCoverUpload}
@@ -444,7 +452,7 @@ function ImagesSection({ userData, loading, dispatch }) {
                 <button
                   onClick={cancelCoverChange}
                   disabled={uploadingCover}
-                  className="flex items-center gap-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-200 text-gray-700 text-xs sm:text-sm rounded-lg hover:bg-gray-300 transition disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 text-xs sm:text-sm rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition disabled:opacity-50"
                 >
                   <MdClose /> Cancel
                 </button>
@@ -483,23 +491,23 @@ function PasswordSection({ loading, dispatch }) {
 
   return (
     <div>
-      <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2">
         <MdLock className="text-lg sm:text-xl" />
         Change Password
       </h2>
-      <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
+      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
         Update your password to keep your account secure
       </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5 max-w-md">
         {/* Current Password */}
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
             Current Password
           </label>
           <input
             type={showPasswords ? "text" : "password"}
-            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             placeholder="Enter current password"
             {...register("oldPassword", { required: "Current password is required" })}
           />
@@ -510,12 +518,12 @@ function PasswordSection({ loading, dispatch }) {
 
         {/* New Password */}
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
             New Password
           </label>
           <input
             type={showPasswords ? "text" : "password"}
-            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             placeholder="Enter new password"
             {...register("newPassword", {
               required: "New password is required",
@@ -532,12 +540,12 @@ function PasswordSection({ loading, dispatch }) {
 
         {/* Confirm Password */}
         <div>
-          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 sm:mb-2">
             Confirm New Password
           </label>
           <input
             type={showPasswords ? "text" : "password"}
-            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm"
+            className="w-full px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             placeholder="Confirm new password"
             {...register("confirmPassword", {
               required: "Please confirm your password",
@@ -557,9 +565,9 @@ function PasswordSection({ loading, dispatch }) {
             id="showPassword"
             checked={showPasswords}
             onChange={() => setShowPasswords(!showPasswords)}
-            className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500 dark:bg-gray-700"
           />
-          <label htmlFor="showPassword" className="text-xs sm:text-sm text-gray-600 cursor-pointer">
+          <label htmlFor="showPassword" className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
             Show passwords
           </label>
         </div>
@@ -588,6 +596,113 @@ function PasswordSection({ loading, dispatch }) {
           </button>
         </div>
       </form>
+    </div>
+  );
+}
+
+// Appearance Section - Theme Toggle
+function AppearanceSection({ theme, dispatch }) {
+  const themeOptions = [
+    { id: "light", label: "Light", icon: MdLightMode, description: "Always use light mode" },
+    { id: "dark", label: "Dark", icon: MdDarkMode, description: "Always use dark mode" },
+    { id: "system", label: "System", icon: MdComputer, description: "Match your device settings" },
+  ];
+
+  return (
+    <div>
+      <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2">
+        <MdPalette className="text-lg sm:text-xl" />
+        Appearance
+      </h2>
+      <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
+        Choose your preferred theme for the app
+      </p>
+
+      {/* Theme Options */}
+      <div className="space-y-3">
+        {themeOptions.map((option) => (
+          <button
+            key={option.id}
+            onClick={() => dispatch(setTheme(option.id))}
+            className={`w-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border-2 transition ${
+              theme === option.id
+                ? "border-red-500 bg-red-50 dark:bg-red-900/20"
+                : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-700"
+            }`}
+          >
+            <div className={`p-2 sm:p-3 rounded-lg ${
+              theme === option.id
+                ? "bg-red-500 text-white"
+                : "bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-300"
+            }`}>
+              <option.icon className="text-lg sm:text-xl" />
+            </div>
+            <div className="flex-1 text-left">
+              <p className={`text-sm sm:text-base font-medium ${
+                theme === option.id
+                  ? "text-red-600 dark:text-red-400"
+                  : "text-gray-900 dark:text-white"
+              }`}>
+                {option.label}
+              </p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                {option.description}
+              </p>
+            </div>
+            {theme === option.id && (
+              <div className="p-1 bg-red-500 rounded-full">
+                <MdCheck className="text-white text-sm sm:text-base" />
+              </div>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Preview */}
+      <div className="mt-6 sm:mt-8">
+        <p className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          Preview
+        </p>
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          {/* Light Preview */}
+          <div className={`p-3 sm:p-4 rounded-xl border-2 ${
+            theme === "light" || (theme === "system" && !window.matchMedia("(prefers-color-scheme: dark)").matches)
+              ? "border-red-500"
+              : "border-gray-200 dark:border-gray-600"
+          }`}>
+            <div className="bg-white rounded-lg p-2 sm:p-3 shadow-sm border border-gray-100">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-200 rounded-full"></div>
+                <div className="flex-1">
+                  <div className="h-2 bg-gray-300 rounded w-3/4 mb-1"></div>
+                  <div className="h-1.5 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </div>
+              <div className="h-12 sm:h-16 bg-gray-100 rounded"></div>
+            </div>
+            <p className="text-[10px] sm:text-xs text-center mt-2 text-gray-600 dark:text-gray-400">Light</p>
+          </div>
+
+          {/* Dark Preview */}
+          <div className={`p-3 sm:p-4 rounded-xl border-2 ${
+            theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+              ? "border-red-500"
+              : "border-gray-200 dark:border-gray-600"
+          }`}>
+            <div className="bg-gray-800 rounded-lg p-2 sm:p-3 shadow-sm border border-gray-700">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gray-600 rounded-full"></div>
+                <div className="flex-1">
+                  <div className="h-2 bg-gray-500 rounded w-3/4 mb-1"></div>
+                  <div className="h-1.5 bg-gray-600 rounded w-1/2"></div>
+                </div>
+              </div>
+              <div className="h-12 sm:h-16 bg-gray-700 rounded"></div>
+            </div>
+            <p className="text-[10px] sm:text-xs text-center mt-2 text-gray-600 dark:text-gray-400">Dark</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

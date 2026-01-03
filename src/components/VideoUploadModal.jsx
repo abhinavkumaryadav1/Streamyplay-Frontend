@@ -42,20 +42,20 @@ function VideoUploadModal({ onClose, onSuccess }) {
   if (uploaded) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl p-8 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-gray-900 mb-2">Upload Complete!</h2>
-          <p className="text-gray-600 mb-6">Your video has been uploaded successfully.</p>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Upload Complete!</h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">Your video has been uploaded successfully.</p>
           <button
             onClick={() => {
               handleClose();
               onSuccess();
             }}
-            className="px-6 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700"
+            className="px-6 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700"
           >
             Done
           </button>
@@ -66,14 +66,14 @@ function VideoUploadModal({ onClose, onSuccess }) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-xl w-full max-w-2xl my-8">
+      <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-2xl my-8">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h2 className="text-lg font-bold">Upload Video</h2>
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">Upload Video</h2>
           <button
             onClick={handleClose}
             disabled={uploading}
-            className="p-2 hover:bg-gray-100 rounded-full transition disabled:opacity-50"
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition disabled:opacity-50 text-gray-900 dark:text-white"
           >
             <MdClose className="text-xl" />
           </button>
@@ -83,7 +83,7 @@ function VideoUploadModal({ onClose, onSuccess }) {
         <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
           {/* Video Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Video File *
             </label>
             {videoPreview ? (
@@ -102,10 +102,10 @@ function VideoUploadModal({ onClose, onSuccess }) {
                 </button>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
-                <MdVideoLibrary className="text-4xl text-gray-400 mb-2" />
-                <p className="text-sm text-gray-600">Click to upload video</p>
-                <p className="text-xs text-gray-400 mt-1">MP4, WebM, or MOV</p>
+              <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                <MdVideoLibrary className="text-4xl text-gray-400 dark:text-gray-500 mb-2" />
+                <p className="text-sm text-gray-600 dark:text-gray-400">Click to upload video</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">MP4, WebM, or MOV</p>
                 <input
                   type="file"
                   accept="video/*"
@@ -124,7 +124,7 @@ function VideoUploadModal({ onClose, onSuccess }) {
 
           {/* Thumbnail Upload */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Thumbnail *
             </label>
             {thumbnailPreview ? (
@@ -143,9 +143,9 @@ function VideoUploadModal({ onClose, onSuccess }) {
                 </button>
               </div>
             ) : (
-              <label className="flex flex-col items-center justify-center w-48 h-28 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
-                <MdImage className="text-2xl text-gray-400 mb-1" />
-                <p className="text-xs text-gray-600">Upload thumbnail</p>
+              <label className="flex flex-col items-center justify-center w-48 h-28 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                <MdImage className="text-2xl text-gray-400 dark:text-gray-500 mb-1" />
+                <p className="text-xs text-gray-600 dark:text-gray-400">Upload thumbnail</p>
                 <input
                   type="file"
                   accept="image/*"
@@ -164,12 +164,12 @@ function VideoUploadModal({ onClose, onSuccess }) {
 
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Title *
             </label>
             <input
               type="text"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               placeholder="Enter video title"
               {...register("title", { required: "Title is required" })}
             />
@@ -180,12 +180,12 @@ function VideoUploadModal({ onClose, onSuccess }) {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Description *
             </label>
             <textarea
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               placeholder="Tell viewers about your video"
               {...register("description", { required: "Description is required" })}
             />
@@ -200,45 +200,45 @@ function VideoUploadModal({ onClose, onSuccess }) {
               {uploadProgress < 100 ? (
                 <>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Uploading to server...</span>
-                    <span className="text-blue-600 font-medium">{uploadProgress}%</span>
+                    <span className="text-gray-600 dark:text-gray-400">Uploading to server...</span>
+                    <span className="text-red-600 font-medium">{uploadProgress}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
                     <div
-                      className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-out"
+                      className="bg-red-600 h-2.5 rounded-full transition-all duration-300 ease-out"
                       style={{ width: `${uploadProgress}%` }}
                     />
                   </div>
                 </>
               ) : (
                 <div className="flex items-center justify-center gap-3">
-                  <svg className="animate-spin h-5 w-5 text-blue-600" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-5 w-5 text-red-600" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  <span className="text-gray-700 font-medium">Processing video on cloud...</span>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium">Processing video on cloud...</span>
                 </div>
               )}
-              <p className="text-xs text-gray-500 text-center">
+              <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
                 Please don't close this window while uploading
               </p>
             </div>
           )}
 
           {/* Submit Button */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button
               type="button"
               onClick={handleClose}
               disabled={uploading}
-              className="px-6 py-2 text-gray-700 hover:bg-gray-100 rounded-full font-medium transition disabled:opacity-50"
+              className="px-6 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full font-medium transition disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={uploading}
-              className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition disabled:opacity-50"
+              className="flex items-center gap-2 px-6 py-2 bg-red-600 text-white rounded-full font-medium hover:bg-red-700 transition disabled:opacity-50"
             >
               {uploading ? (
                 <>

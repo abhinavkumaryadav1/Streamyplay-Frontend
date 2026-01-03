@@ -64,7 +64,7 @@ function VideoCard({ video }) {
     <Link to={`/watch/${_id}`} className="block group" onClick={handleVideoClick}>
       <div className="flex flex-col w-full">
         {/* Thumbnail Container */}
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-200">
+        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700">
           {thumbnailUrl ? (
             <img
               src={thumbnailUrl}
@@ -73,8 +73,8 @@ function VideoCard({ video }) {
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-300">
-              <span className="text-gray-500 text-sm">No Thumbnail</span>
+            <div className="w-full h-full flex items-center justify-center bg-gray-300 dark:bg-gray-600">
+              <span className="text-gray-500 dark:text-gray-400 text-sm">No Thumbnail</span>
             </div>
           )}
           {/* Duration Badge */}
@@ -98,8 +98,8 @@ function VideoCard({ video }) {
                 className="w-9 h-9 rounded-full object-cover hover:opacity-80 transition"
               />
             ) : (
-              <div className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center">
-                <span className="text-gray-600 text-sm font-semibold">
+              <div className="w-9 h-9 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                <span className="text-gray-600 dark:text-gray-300 text-sm font-semibold">
                   {owner?.username?.charAt(0)?.toUpperCase() || "U"}
                 </span>
               </div>
@@ -108,17 +108,17 @@ function VideoCard({ video }) {
 
           {/* Title and Meta */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-semibold text-gray-900 line-clamp-2 leading-5 group-hover:text-blue-600 transition">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 leading-5 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
               {title}
             </h3>
             <Link
               to={`/channel/${owner?.username}`}
               onClick={(e) => e.stopPropagation()}
-              className="text-xs text-gray-600 hover:text-gray-900 mt-1 block"
+              className="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mt-1 block"
             >
               {owner?.fullName || owner?.username}
             </Link>
-            <div className="text-xs text-gray-500 mt-0.5">
+            <div className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
               <span>{formatViews(views)}</span>
               <span className="mx-1">•</span>
               <span>{formatDistanceToNow(createdAt)}</span>

@@ -25,7 +25,7 @@ export default function BottomNav() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-between items-center px-2 py-1 z-40 sm:hidden">
+    <nav className="fixed bottom-0 left-0 w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center px-2 py-1 z-40 sm:hidden">
       {navItems.map((item) => (
         <NavLink
           key={item.to}
@@ -33,7 +33,7 @@ export default function BottomNav() {
           onClick={(e) => handleNavClick(e, item)}
           className={({ isActive }) =>
             `flex flex-col items-center flex-1 text-[11px] py-1 px-1 transition-colors ${
-              isActive ? "text-red-600" : "text-gray-500"
+              isActive ? "text-red-600" : "text-gray-500 dark:text-gray-400"
             }`
           }
         >
