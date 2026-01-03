@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Get initial theme from localStorage or default to light
+// Get initial theme from localStorage or default to system
 const getInitialTheme = () => {
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme) return savedTheme;
-  // Default to light theme for new users
-  return "light";
+  // Default to system theme for new users
+  return "system";
 };
 
 const initialState = {

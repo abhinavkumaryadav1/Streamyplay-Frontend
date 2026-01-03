@@ -13,8 +13,8 @@ setStore(store);
 // Apply initial theme before render to prevent flash
 const savedTheme = localStorage.getItem("theme");
 const systemDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-// Only apply dark mode if explicitly set to dark, or if set to system and system is dark
-if (savedTheme === "dark" || (savedTheme === "system" && systemDark)) {
+// Apply dark mode if explicitly set to dark, or if system theme and device prefers dark, or no theme saved and device prefers dark
+if (savedTheme === "dark" || (savedTheme === "system" && systemDark) || (!savedTheme && systemDark)) {
   document.documentElement.classList.add("dark");
 }
 
