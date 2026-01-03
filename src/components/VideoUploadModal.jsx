@@ -14,7 +14,7 @@ function VideoUploadModal({ onClose, onSuccess }) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm(); 
 
   const onSubmit = async (data) => {
     await dispatch(publishAvideo(data));
