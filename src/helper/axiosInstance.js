@@ -55,11 +55,20 @@ axiosInstance.interceptors.response.use(
       const state = storeRef.getState();
       const errorMessage = error.response?.data?.message || error.response?.data?.error || "";
       
-      // If user is not logged in, show auth modal
-      if (!state.auth.userData) {
+      // Public endpoints that don't require authentication - don't show auth modal for these
+      const publicEndpoints = ["/video", "/user/c/", "/user/channel"];
+      const isPublicEndpoint = publicEndpoints.some(url => originalRequest.url?.includes(url));
+      
+      // If user is not logged in and it's not a public endpoint, show auth modal
+      if (!state.auth.userData && !isPublicEndpoint) {
         import("../Store/Slices/uiSlice").then(({ openAuthModal }) => {
           storeRef.dispatch(openAuthModal("Please sign in to access this content"));
         });
+        return Promise.reject(error);
+      }
+      
+      // If it's a public endpoint and user is not logged in, just reject without showing modal
+      if (!state.auth.userData && isPublicEndpoint) {
         return Promise.reject(error);
       }
       

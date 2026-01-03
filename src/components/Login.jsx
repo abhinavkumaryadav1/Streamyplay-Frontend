@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { userLogin } from "../Store/Slices/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import { closeAuthModal } from "../Store/Slices/uiSlice";
 import LoginSkeleton from "../skeleton/loginSkeleton.jsx";
 import { MdError } from "react-icons/md";
 
@@ -73,6 +74,7 @@ function Login() {
       : data;
     try {
       await dispatch(userLogin(loginData)).unwrap();
+      dispatch(closeAuthModal()); // Close any open auth modal
       navigate("/");
     } catch (err) {
       setErrorMsg(err || "Invalid credentials or user not found.");

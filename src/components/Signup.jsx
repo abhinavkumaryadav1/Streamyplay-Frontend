@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { createAccount, userLogin } from "../Store/Slices/authSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import { closeAuthModal } from "../Store/Slices/uiSlice";
 import LoginSkeleton from "../skeleton/loginSkeleton.jsx";
 import GetImagePreview from "./GetImagePreview.jsx";
 import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
@@ -94,6 +95,7 @@ function SignUp() {
 
     const handleContinue = () => {
         setShowTermsModal(false);
+        dispatch(closeAuthModal()); // Close any open auth modal
         navigate("/");
     };
 
