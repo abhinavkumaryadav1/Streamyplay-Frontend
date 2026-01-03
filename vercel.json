@@ -3,6 +3,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://streamyplay-backend.onrender.com/api/v1/$1"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
