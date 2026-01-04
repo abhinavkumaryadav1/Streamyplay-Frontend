@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../helper/axiosInstance";
 import toast from "react-hot-toast";
-import axios from "axios";
 
 
 const initialState = {
@@ -67,10 +66,7 @@ export const publishAvideo = createAsyncThunk(
         formData.append("thumbnail", data.thumbnail[0]);
 
         try {
-            const response = await axios.post("https://streamyplay-backend.onrender.com/api/v1/video",
-  formData,
-  {
-                withCredentials: true,
+            const response = await axiosInstance.post("/video", formData, {
                 onUploadProgress: (progressEvent) => {
                     const progress = Math.round(
                         (progressEvent.loaded * 100) / progressEvent.total
