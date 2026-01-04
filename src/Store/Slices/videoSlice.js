@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import axiosInstance from "../../helper/axiosInstance";
 import toast from "react-hot-toast";
 import { BASE_URL } from "../../constants";
@@ -67,11 +66,7 @@ export const publishAvideo = createAsyncThunk(
         formData.append("thumbnail", data.thumbnail[0]);
 
         try {
-            // Use direct backend URL to bypass Vercel's 30s timeout for large uploads
-            const DIRECT_BACKEND_URL = "https://streamyplay-backend.onrender.com/api/v1";
-            const response = await axios.post(`${DIRECT_BACKEND_URL}/video`, formData, {
-                withCredentials: true,
-                timeout: 600000, // 10 minutes timeout for large video uploads
+            const response = await axiosInstance.post("/video", formData, {
                 onUploadProgress: (progressEvent) => {
                     const progress = Math.round(
                         (progressEvent.loaded * 100) / progressEvent.total
@@ -194,6 +189,11 @@ const videoSlice = createSlice({
         builder.addCase(publishAvideo.fulfilled, (state) => {
             state.uploading = false;
             state.uploaded = true;
+        });
+        builder.addCase(publishAvideo.rejected, (state) => {
+            state.uploading = false;
+            state.uploaded = false;
+            state.uploadProgress = 0;
         });
         builder.addCase(updateAVideo.pending, (state) => {
             state.uploading = true;
