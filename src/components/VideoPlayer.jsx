@@ -109,16 +109,45 @@ function VideoPlayer({ src, poster, onTheaterModeChange, theaterMode = false }) 
 
   // Toggle fullscreen
   const toggleFullscreen = useCallback(() => {
-    if (!containerRef.current) return;
+    const video = videoRef.current;
+    const container = containerRef.current;
+    
+    if (!container || !video) return;
 
-    if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen?.() ||
-        containerRef.current.webkitRequestFullscreen?.() ||
-        containerRef.current.msRequestFullscreen?.();
+    // Check if we're currently in fullscreen
+    const isCurrentlyFullscreen = !!(
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      video.webkitDisplayingFullscreen
+    );
+
+    if (!isCurrentlyFullscreen) {
+      // Enter fullscreen
+      // Try container fullscreen first (works on most browsers)
+      if (container.requestFullscreen) {
+        container.requestFullscreen();
+      } else if (container.webkitRequestFullscreen) {
+        container.webkitRequestFullscreen();
+      } else if (container.msRequestFullscreen) {
+        container.msRequestFullscreen();
+      } 
+      // iOS Safari: use video element's native fullscreen
+      else if (video.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen();
+      } else if (video.webkitSupportsFullscreen) {
+        video.webkitEnterFullscreen();
+      }
     } else {
-      document.exitFullscreen?.() ||
-        document.webkitExitFullscreen?.() ||
-        document.msExitFullscreen?.();
+      // Exit fullscreen
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      } else if (video.webkitExitFullscreen) {
+        video.webkitExitFullscreen();
+      }
     }
   }, []);
 
@@ -206,12 +235,35 @@ function VideoPlayer({ src, poster, onTheaterModeChange, theaterMode = false }) 
 
   // Fullscreen change listener
   useEffect(() => {
+    const video = videoRef.current;
+    
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      const isCurrentlyFullscreen = !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        video?.webkitDisplayingFullscreen
+      );
+      setIsFullscreen(isCurrentlyFullscreen);
     };
 
+    // Standard fullscreen events
     document.addEventListener("fullscreenchange", handleFullscreenChange);
-    return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+    
+    // iOS Safari specific events
+    if (video) {
+      video.addEventListener("webkitbeginfullscreen", () => setIsFullscreen(true));
+      video.addEventListener("webkitendfullscreen", () => setIsFullscreen(false));
+    }
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      if (video) {
+        video.removeEventListener("webkitbeginfullscreen", () => setIsFullscreen(true));
+        video.removeEventListener("webkitendfullscreen", () => setIsFullscreen(false));
+      }
+    };
   }, []);
 
   // Keyboard shortcuts
