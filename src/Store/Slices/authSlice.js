@@ -229,11 +229,16 @@ const authSlice = createSlice({
             state.loading = false;
             state.status = true;
             state.userData = action.payload;
+            // Sync fresh user data to localStorage
+            localStorage.setItem("userData", JSON.stringify(action.payload));
+            localStorage.setItem("status", "true");
         });
         builder.addCase(getCurrentUser.rejected, (state) => {
             state.loading = false;
             state.status = false;
             state.userData = null;
+            localStorage.removeItem("userData");
+            localStorage.removeItem("status");
         });
         builder.addCase(updateAvatar.pending, (state) => {
             state.loading = true;
